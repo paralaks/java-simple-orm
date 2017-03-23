@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="lib"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/c3p0-0.9.5.1.jar" sourcepath="lib/c3p0-0.9.5.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/mchange-commons-java-0.2.10.jar" sourcepath="lib/mchange-commons-java-0.2.10-sources.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.37-bin.jar" sourcepath="lib/mysql-connector-java-5.1.37-src.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
