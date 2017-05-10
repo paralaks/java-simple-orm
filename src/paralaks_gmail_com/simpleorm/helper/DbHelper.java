@@ -547,8 +547,7 @@ public final class DbHelper {
 
 	// populates first object's oldmap which can be used to check whether an field value was changed after it was loaded by find.
 	// Also executes afterFindAndLoad function for the first object in the list.
-	private <T extends OrmModel> void callbacksForFirstItem(List<T> results,
-			HashMap<String, FieldProperties> fieldMap) {
+	private <T extends OrmModel> void callbacksForFind(List<T> results, HashMap<String, FieldProperties> fieldMap) {
 		if (results.size() == 0)
 			return;
 
@@ -674,8 +673,9 @@ public final class DbHelper {
 			closeSqlObjects(rSetFind, pStFind);
 		}
 
-		// fill old value map for 1st record
-		callbacksForFirstItem(results, fieldMap);
+		// being called for find(() so execute callbacks
+		if (findOne)
+			callbacksForFind(results, fieldMap);
 
 		return results;
 	}
@@ -752,8 +752,9 @@ public final class DbHelper {
 			closeSqlObjects(rSetFind, pStFind);
 		}
 
-		// fill old value map for 1st record
-		callbacksForFirstItem(results, fieldMap);
+		// being called for find() so execute callbacks
+		if (limitOffset != null && limitCount != null && limitOffset.equals(0) && limitCount.equals(1))
+			callbacksForFind(results, fieldMap);
 
 		return results;
 	}
@@ -1085,8 +1086,11 @@ public final class DbHelper {
 
 			// construct statements and add to batch
 			for (Object[] row : rows) {
-				if (row.length != columns.length)
+				if (row.length != columns.length) {
+					LOGGER.warning("Column/value count mismatch in importRows. Record not saved.");
 					continue;
+				}
+
 				for (int i = 0, end = columns.length; i < end; i++)
 					pStUpsert.setObject(i + 1, row[i]);
 				pStUpsert.addBatch();
@@ -1298,12 +1302,12 @@ public final class DbHelper {
 		Class<? extends OrmModel> klass = object.getClass();
 		HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
 
-		StringBuilder asString = new StringBuilder(klass.getSimpleName() + " [");
-
 		// no recognized type
 		if (fieldMap.size() == 0)
-			return asString.append("]").toString();
+			return klass.getSimpleName() + "[]";
 
+		StringBuilder asString = new StringBuilder(fieldMap.size() * 30); // 25 chars per field name and value initially
+		asString.append(klass.getSimpleName() + " [");
 
 		String fieldName = null;
 		Object fieldValue = null;
@@ -1318,7 +1322,7 @@ public final class DbHelper {
 				LOGGER.warning(e.getStackTrace().toString());
 			}
 
-		return asString.substring(0, asString.length() - 2) + "]";
+		return asString.substring(0, asString.length() - 2) + ']';
 	}
 
 	/**

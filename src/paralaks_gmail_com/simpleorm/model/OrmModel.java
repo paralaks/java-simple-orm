@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-import paralaks_gmail_com.simpleorm.helper.LogHelper;
 import paralaks_gmail_com.simpleorm.helper.DbHelper;
+import paralaks_gmail_com.simpleorm.helper.LogHelper;
 
 // Per http://docs.oracle.com/javase/tutorial/information/glossary.html field is used in method names
 
@@ -56,7 +56,7 @@ public abstract class OrmModel {
 	}
 
 	/**
-	 * Called by {@link #vpn.sel.mw.helper.OrmDb}'s find(...) functions to initialize and populate {@link #oldMap} which is used used by
+	 * Called by {@link #vpn.sel.mw.helper.DbHelper}'s find(...) functions to initialize and populate {@link #oldMap} which is used used by
 	 * {@link #fieldChanged(String)} function.
 	 *
 	 * @param map
@@ -68,7 +68,7 @@ public abstract class OrmModel {
 	/**
 	 * Returns {@link #oldMap} to be used by {@link #fieldChanged(String)} function.
 	 *
-	 * @return copy of oldMap which is populated when model is loaded by {@link #vpn.sel.mw.helper.OrmDb}'s find(...) functions.
+	 * @return copy of oldMap which is populated when model is loaded by {@link #vpn.sel.mw.helper.DbHelper}'s find(...) functions.
 	 */
 	public final HashMap<String, Object> getOldMap() {
 		// return a copy to prevent updates
@@ -631,10 +631,7 @@ public abstract class OrmModel {
 				|| db.find(this.getClass(), "id=" + id) == null)
 			return false;
 
-		HashMap<String, Object> fields = new HashMap<>();
-		fields.put(field, value);
-
-		boolean loadResult = db.loadFrom(this, fields);
+		boolean loadResult = db.loadFrom(this, DbHelper.initHashMap(field, value));
 		boolean saveResult = false;
 
 		if (loadResult) {
