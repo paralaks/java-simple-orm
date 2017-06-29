@@ -37,7 +37,7 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 
 		assertFalse(model.isFrozen());
 		assertTrue(model.getOldMap().isEmpty());
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 
 		assertFalse(model.isFrozen());
 		assertFalse(model.getOldMap().isEmpty());
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 	}
 
 	@Test
@@ -73,7 +73,7 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 
 		assertFalse(model.isFrozen());
 		assertFalse(model.getOldMap().isEmpty());
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 	}
 
 	@Test
@@ -1199,37 +1199,37 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 		model.initAllNull();
 		model.beforeValidate();
 		assertTrue(model.hasError(ERROR_TOTAL));
-		assertEquals(1, model.getAllErrors().size());
+		assertEquals(1, model.getErrorsMap().size());
 
 		model.initAllNull();
 		model.setTotal(TOTAL_NOT_EMPTY);
 		model.beforeValidate();
 		assertFalse(model.hasError(ERROR_TOTAL));
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 
 		model.initAllEmpty();
 		model.beforeValidate();
 		assertFalse(model.hasError(ERROR_TOTAL));
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 		model.initAllEmpty();
 		model.setTotal(TOTAL_NOT_EMPTY);
 		model.beforeValidate();
 		assertFalse(model.hasError(ERROR_TOTAL));
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 
 		model.initAllNotEmpty();
 		model.beforeValidate();
 		assertFalse(model.hasError(ERROR_TOTAL));
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 		model.initAllNotEmpty();
 		model.setTotal(TOTAL_NOT_EMPTY);
 		model.beforeValidate();
 		assertFalse(model.hasError(ERROR_TOTAL));
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 	}
 
 	@Test
@@ -1239,37 +1239,37 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 		model.initAllNull();
 		model.validate();
 		assertTrue(model.hasError(ERROR_STATUS));
-		assertEquals(1, model.getAllErrors().size());
+		assertEquals(1, model.getErrorsMap().size());
 
 		model.initAllNull();
 		model.setStatus(Boolean.TRUE);
 		model.validate();
 		assertFalse(model.hasError(ERROR_STATUS));
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 
 		model.initAllEmpty();
 		model.validate();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 		model.initAllEmpty();
 		model.setId(1);
 		model.setCreatedAt(DATE_FUTURE);
 		model.validate();
 		assertTrue(model.hasError(ERROR_CREATED_AT));
-		assertEquals(1, model.getAllErrors().size());
+		assertEquals(1, model.getErrorsMap().size());
 
 
 		model.initAllNotEmpty();
 		model.validate();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 		model.initAllNotEmpty();
 		model.setId(1);
 		model.setCreatedAt(DATE_FUTURE);
 		model.validate();
 		assertTrue(model.hasError(ERROR_CREATED_AT));
-		assertEquals(1, model.getAllErrors().size());
+		assertEquals(1, model.getErrorsMap().size());
 	}
 
 	@Test
@@ -1577,10 +1577,10 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 		model.initAllNull();
 
 		model.addError("id", ERROR_ID);
-		assertNotNull(model.getAllErrors());
-		assertEquals(1, model.getAllErrors().size());
+		assertNotNull(model.getErrorsMap());
+		assertEquals(1, model.getErrorsMap().size());
 		model.addError("content", ERROR_CONTENT);
-		assertEquals(2, model.getAllErrors().size());
+		assertEquals(2, model.getErrorsMap().size());
 	}
 
 	@Test
@@ -1595,7 +1595,7 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 		assertNull(model.getErrors());
 		model.setId(MAX_ID_LIMIT);
 		model.afterSave();
-		assertEquals(1, model.getAllErrors().size());
+		assertEquals(1, model.getErrorsMap().size());
 		assertEquals(model.getErrors(), ERROR_ID_MAXED_OUT);
 
 		model.initAllEmpty();
@@ -1606,7 +1606,7 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 		assertNull(model.getErrors());
 		model.setId(MAX_ID_LIMIT);
 		model.afterSave();
-		assertEquals(1, model.getAllErrors().size());
+		assertEquals(1, model.getErrorsMap().size());
 		assertEquals(model.getErrors(), ERROR_ID_MAXED_OUT);
 
 		model.initAllNotEmpty();
@@ -1617,7 +1617,7 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 		assertNull(model.getErrors());
 		model.setId(MAX_ID_LIMIT);
 		model.afterSave();
-		assertEquals(1, model.getAllErrors().size());
+		assertEquals(1, model.getErrorsMap().size());
 		assertEquals(model.getErrors(), ERROR_ID_MAXED_OUT);
 	}
 
@@ -1633,7 +1633,7 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 		assertNull(model.getErrors());
 		model.setId(MAX_ID_LIMIT);
 		model.afterSave();
-		assertEquals(1, model.getAllErrors().size());
+		assertEquals(1, model.getErrorsMap().size());
 		assertEquals(model.getErrors(), ERROR_ID_MAXED_OUT);
 		assertEquals(model.getErrors(), model.getAfterSaveError());
 	}
@@ -1645,9 +1645,9 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 		model.addError("id", ERROR_ID);
 		model.addError("content", ERROR_CONTENT);
 
-		assertNotNull(model.getAllErrors());
-		assertEquals(ERROR_ID, model.getAllErrors().get("id"));
-		assertEquals(ERROR_CONTENT, model.getAllErrors().get("content"));
+		assertNotNull(model.getErrorsMap());
+		assertEquals(ERROR_ID, model.getErrorsMap().get("id"));
+		assertEquals(ERROR_CONTENT, model.getErrorsMap().get("content"));
 	}
 
 	@Test
@@ -1957,56 +1957,56 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 	@Test
 	public void testBeforeDestroyFunction() {
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		assertTrue(model.beforeDestroy());
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.setId(THRESHOLD_BEFORE_DESTROY_ID - 1);
 		assertTrue(model.beforeDestroy());
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.setId(THRESHOLD_BEFORE_DESTROY_ID);
 		assertFalse(model.beforeDestroy());
-		assertNotNull(model.getAllErrors());
+		assertNotNull(model.getErrorsMap());
 		assertEquals("beforeDestroyTest", model.getError("id"));
 
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.setId(THRESHOLD_BEFORE_DESTROY_ID + 1);
 		assertFalse(model.beforeDestroy());
-		assertNotNull(model.getAllErrors());
+		assertNotNull(model.getErrorsMap());
 		assertEquals("beforeDestroyTest", model.getError("id"));
 	}
 
 	@Test
 	public void testAfterDestroyFunction() {
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.afterDestroy();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.setId(THRESHOLD_AFTER_DESTROY_ID - 1);
 		model.afterDestroy();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.setId(THRESHOLD_AFTER_DESTROY_ID);
 		model.afterDestroy();
-		assertNotNull(model.getAllErrors());
+		assertNotNull(model.getErrorsMap());
 		assertEquals("afterDestroyTest", model.getError("id"));
 
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.setId(THRESHOLD_AFTER_DESTROY_ID + 1);
 		model.afterDestroy();
-		assertNotNull(model.getAllErrors());
+		assertNotNull(model.getErrorsMap());
 		assertEquals("afterDestroyTest", model.getError("id"));
 	}
 
@@ -2121,28 +2121,28 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
 	@Test
 	public void testAfterFindAndLoadFunction() {
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.afterFindAndLoad();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.setId(THRESHOLD_AFTER_FIND_AND_LOAD_ID - 1);
 		model.afterFindAndLoad();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.setId(THRESHOLD_AFTER_FIND_AND_LOAD_ID);
 		model.afterFindAndLoad();
-		assertNotNull(model.getAllErrors());
+		assertNotNull(model.getErrorsMap());
 		assertEquals("afterFindAndLoadTest", model.getError("id"));
 
 		model.initAllNull();
-		assertNull(model.getAllErrors());
+		assertNull(model.getErrorsMap());
 		model.setId(THRESHOLD_AFTER_FIND_AND_LOAD_ID + 1);
 		model.afterFindAndLoad();
-		assertNotNull(model.getAllErrors());
+		assertNotNull(model.getErrorsMap());
 		assertEquals("afterFindAndLoadTest", model.getError("id"));
 	}
 

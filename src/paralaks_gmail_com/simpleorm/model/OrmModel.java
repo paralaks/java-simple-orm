@@ -533,7 +533,7 @@ public abstract class OrmModel {
 	/**
 	 * @return null or error messages hash map if it was initialized
 	 */
-	public final HashMap<String, String> getAllErrors() {
+	public final HashMap<String, String> getErrorsMap() {
 		return errorMessages;
 	}
 
