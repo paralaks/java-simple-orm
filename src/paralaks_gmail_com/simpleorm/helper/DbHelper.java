@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -729,8 +730,9 @@ public final class DbHelper {
 				: " WHERE " + where.replaceAll(regWhereClean, "").trim();
 		String partOrderBy = orderBy == null || orderBy.trim().length() == 0 ? ""
 				: " ORDER BY " + orderBy.replaceAll(regGroupOrderClean, "").trim();
-		String limitBy = " LIMIT " + ((limitCount == null || limitCount < 1 || limitCount > MAX_SELECT_LIMIT)
-				? MAX_SELECT_LIMIT : limitCount)
+		String limitBy = " LIMIT "
+				+ ((limitCount == null || limitCount < 1 || limitCount > MAX_SELECT_LIMIT) ? MAX_SELECT_LIMIT
+						: limitCount)
 				+ (limitOffset == null || limitOffset < 1 ? "" : " OFFSET " + limitOffset);
 
 		String query = "SELECT * FROM " + tableName(klass) + partWhere + partOrderBy + limitBy;
@@ -827,7 +829,8 @@ public final class DbHelper {
 			return ids;
 
 		String partWhere = where != null && (where = where.trim()).length() > 0
-				? " WHERE " + where.replaceAll(regWhereClean, "") : " ";
+				? " WHERE " + where.replaceAll(regWhereClean, "")
+				: " ";
 
 		String query = "SELECT * FROM " + tableName(klass) + partWhere + " LIMIT " + MAX_SELECT_LIMIT_IDS;
 		PreparedStatement pStFind = null;
@@ -940,7 +943,11 @@ public final class DbHelper {
 		// pull field values from object
 		for (FieldProperties fp : fieldMap.values())
 			try {
-				values.put(fp.fieldName, fp.field.get(object));
+				// id can not be changed once set
+				if (fp.fieldName.equals("id") && !object.fieldWas("id", null) && object.fieldChanged("id"))
+					values.put("id", object.getOldValue("id"));
+				else
+					values.put(fp.fieldName, fp.field.get(object));
 			} catch (Exception e) {
 				values.put(fp.fieldName, null);
 				LOGGER.warning(e.getStackTrace().toString());
@@ -1131,7 +1138,7 @@ public final class DbHelper {
 	 * @return Hashmap, empty or populated with non-null field/value pairs.
 	 */
 	public <T extends OrmModel> HashMap<String, Object> fieldsFor(T object, List<String> fieldsList) {
-		HashMap<String, Object> fields = new HashMap<>();
+		HashMap<String, Object> fields = new LinkedHashMap<>(); // preserve field order with LinkedHashMap
 
 		if (object == null || fieldsList == null || fieldsList.size() == 0)
 			return fields;
@@ -1359,7 +1366,9 @@ public final class DbHelper {
 		HashMap<String, FieldProperties> fieldMap = getClassFields(object.getClass());
 
 		for (String fieldName : fieldValueMap.keySet())
-			if (fieldMap.containsKey(fieldName))
+			if (fieldName == null || (fieldName = fieldName.toLowerCase()).isEmpty())
+				continue;
+			else if (fieldMap.containsKey(fieldName))
 				try {
 					FieldProperties fp = fieldMap.get(fieldName);
 					Object value = fieldValueMap.get(fieldName);
@@ -1610,7 +1619,11 @@ public final class DbHelper {
 
 		for (int i = 0, end = columns.length; i < end; i++) {
 			column = columns[i];
-			value = values[i];
+			if (column == null || (column = column.toLowerCase()).isEmpty() || column.equals("id")
+					|| column.equals("created_at"))
+				continue;
+
+			value = column.equals("updated_at") ? getNowMillis() : values[i];
 
 			if (fieldMap.containsKey(column))
 				if (rawAssignment)
