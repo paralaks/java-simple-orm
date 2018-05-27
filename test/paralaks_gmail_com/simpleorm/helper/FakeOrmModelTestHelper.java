@@ -22,8 +22,6 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import paralaks_gmail_com.simpleorm.model.FakeOrmModel;
 
 public class FakeOrmModelTestHelper {
-	private final static String dbSchema = "test";
-	private final static String dbUser = "test";
 	private final static ComboPooledDataSource pool;
 
 	protected boolean testTableReady = false;
@@ -38,6 +36,9 @@ public class FakeOrmModelTestHelper {
 	protected List<FakeOrmModel> foundList = null;
 
 	public static final String TABLE_NAME_FAKE_MODEL = "fake_orm_models";
+	private static final String DB_HOST = "localhost";
+	private static final String DB_SCHEMA = "test";
+	private static final String DB_USER = "test";
 
 	public static final Integer ID_EMPTY = null;
 	public static final Integer ID_NOT_EMPTY = 8;
@@ -112,7 +113,7 @@ public class FakeOrmModelTestHelper {
 		try {
 			pool.setDriverClass("com.mysql.jdbc.Driver"); // loads the jdbc driver
 			pool.setJdbcUrl(getJdbcUrl());
-			pool.setUser(dbUser);
+			pool.setUser(DB_USER);
 			pool.setMinPoolSize(10);
 			pool.setAcquireIncrement(1);
 			pool.setMaxPoolSize(10);
@@ -123,7 +124,7 @@ public class FakeOrmModelTestHelper {
 	}
 
 	public static String getJdbcUrl() {
-		return "jdbc:mysql://db/" + dbSchema + "?user=" + dbUser;
+		return "jdbc:mysql://" + DB_HOST + "/" + DB_SCHEMA + "?user=" + DB_USER;
 	}
 
 	public static Connection getNewConnection() {
@@ -143,7 +144,7 @@ public class FakeOrmModelTestHelper {
 			pool = new ComboPooledDataSource();
 			pool.setDriverClass("com.mysql.jdbc.Driver"); // loads the jdbc driver
 			pool.setJdbcUrl(getJdbcUrl());
-			pool.setUser(dbUser);
+			pool.setUser(DB_USER);
 
 			// the settings below are optional -- c3p0 can work with defaults
 			// we will use small numbers since multiple instances of pooled datasource might be active and MySQL might hit max connection limit
