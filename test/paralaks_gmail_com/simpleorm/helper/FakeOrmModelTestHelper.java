@@ -22,34 +22,20 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import paralaks_gmail_com.simpleorm.model.FakeOrmModel;
 
 public class FakeOrmModelTestHelper {
-	private final static ComboPooledDataSource pool;
-
-	protected boolean testTableReady = false;
-
-	protected FakeOrmModel model;
-	protected FakeOrmModel model2;
-	protected FakeOrmModel nullModel;
-	protected Connection connection;
-	protected DbHelper db;
-
-	protected FakeOrmModel foundOne = null;
-	protected List<FakeOrmModel> foundList = null;
-
-	public static final String TABLE_NAME_FAKE_MODEL = "fake_orm_models";
 	private static final String DB_HOST = "localhost";
 	private static final String DB_SCHEMA = "test";
 	private static final String DB_USER = "test";
 
 	public static final Integer ID_EMPTY = null;
 	public static final Integer ID_NOT_EMPTY = 8;
+	public static final Integer TOTAL_EMPTY = 0;
+	public static final Integer TOTAL_NOT_EMPTY = 5;
 
 	public static final String CONTENT_EMPTY = "";
 	public static final String CONTENT_NOT_EMPTY = "this is some content";
 	public static final String CONTENT_BY_ONCREATE = "Set by onCreate";
 	public static final String CONTENT_BY_ONUPDATE = "Set by onUpdate";
-
-	public static final Integer TOTAL_EMPTY = 0;
-	public static final Integer TOTAL_NOT_EMPTY = 5;
+	public static final String TABLE_NAME_FAKE_MODEL = "fake_orm_models";
 
 	public static final Boolean STATUS_EMPTY = Boolean.FALSE;
 	public static final Boolean STATUS_NOT_EMPTY = Boolean.TRUE;
@@ -67,14 +53,26 @@ public class FakeOrmModelTestHelper {
 	public static final String ERROR_STATUS = "Status can not be null";
 	public static final String ERROR_TOTAL = "Total can not be null";
 	public static final String ERROR_CREATED_AT = "Created at can not be in the future";
+	public static final String[] IMPORT_COLUMNS = { "status", "total", "content", "created_at", "updated_at" };
+
+	private static final ComboPooledDataSource pool;
 	public static final Date DATE_EMPTY;
 	public static final Date DATE_NOT_EMPTY;
 	public static final Date DATE_FUTURE;
-	public static final String[] TEST_DATA_QUERIES;
-	public static final List<Object[]> IMPORT_ROWS;
 	public static final String DATE_NOT_EMPTY_STR;
 
-	public static final String[] IMPORT_COLUMNS = { "status", "total", "content", "created_at", "updated_at" };
+	public static final String[] TEST_DATA_QUERIES;
+	public static final List<Object[]> IMPORT_ROWS;
+
+	protected boolean testTableReady = false;
+
+	protected FakeOrmModel model;
+	protected FakeOrmModel model2;
+	protected FakeOrmModel nullModel;
+	protected Connection connection;
+	protected DbHelper db;
+	protected FakeOrmModel foundOne = null;
+	protected List<FakeOrmModel> foundList = null;
 
 	static {
 		Calendar c = Calendar.getInstance();

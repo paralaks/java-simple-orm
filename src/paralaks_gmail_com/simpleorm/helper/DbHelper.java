@@ -40,18 +40,30 @@ public final class DbHelper {
 		public String fieldType;
 	}
 
-	public final int MAX_SELECT_LIMIT = 5000;
-	public final int MAX_SELECT_LIMIT_IDS = 5000;
+	public static final char UNDERSCORE_CHAR = '_';
+	public static final int MAX_SELECT_LIMIT = 5000;
+	public static final int MAX_SELECT_LIMIT_IDS = 5000;
+	public static final String UNDERSCORE_STR = "_";
+	public static final String EMPTY_STR = "";
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
+	private static final String WHERE_STR = " WHERE ";
+	private static final String UPDATE_STR = "UPDATE ";
+	private static final String PLACEHOLDER_WHERE = "<PLACEHOLDER_WHERE>";
+	private static final String SELECT_COUNT_FROM = "SELECT COUNT(*) FROM ";
+	private static final String SELECT_ALL_FROM = "SELECT * FROM ";
+	private static final String DELETE_FROM = "DELETE FROM ";
+	private static final String ON_DUPLICATE_KEY_UPDATE = " ON DUPLICATE KEY UPDATE ";
+
+	private static final String REGEX_CLEAN_WHERE = "[;]";
+	private static final String REGEX_CLEAN_GROUP_ORDER = "[^ A-z0-9@,._;-]";
+	private static final String REGEX_FIELD_NAME = "\\b(?<f>";
+	private static final String	REGEX_FIELD_OPERATOR_VALUE = "\\s{0,}(?<op>[!=<>][!=<>]?)\\s{0,}(['`](?<v1>[^'`]{0,})['`]|(?<v2>[^\\s]*))";
+	
 	private static final Logger LOGGER = LogHelper.getLogSingleLineOutput(DbHelper.class.getName());
 
 	private final Set<String> mappedTypes = new HashSet<>();
 	private final HashMap<String, ClassInfo> cachedClasses = new HashMap<>();
-	private final String regWhereClean = "[;]";
-	private final String regGroupOrderClean = "[^ A-z0-9@,._;-]";
-	private final String PLACEHOLDER_WHERE = "<PLACEHOLDER_WHERE>";
-	private final String SELECT_COUNT = "SELECT COUNT(*) ";
-	private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 	private boolean ansiSql = false;
 	private Connection connection = null;
@@ -194,9 +206,8 @@ public final class DbHelper {
 
 	private static String _snakeToCamel(final String snake, final boolean isLower) {
 		if (snake == null || snake.isEmpty())
-			return "";
+			return EMPTY_STR;
 
-		final char underscore = '_';
 		StringBuffer camel = new StringBuffer(snake.length());
 
 		// convert input to lowercase
@@ -204,17 +215,18 @@ public final class DbHelper {
 
 		// capitalize char following an underscore
 		char charCurr = snake.charAt(0);
-		boolean isUnderScorePrev = charCurr == underscore ? true : false;
+		boolean isUnderScorePrev = charCurr == UNDERSCORE_CHAR ? true : false;
 		camel.append(isLower ? charCurr : Character.toUpperCase(charCurr));
 
 		for (int i = 1, end = snake.length(); i < end; i++) {
 			charCurr = snake.charAt(i);
-			camel.append((isUnderScorePrev && charCurr != underscore) ? Character.toUpperCase(charCurr) : charCurr);
-			isUnderScorePrev = (charCurr == underscore) ? true : false;
+			camel.append(
+					(isUnderScorePrev && charCurr != UNDERSCORE_CHAR) ? Character.toUpperCase(charCurr) : charCurr);
+			isUnderScorePrev = (charCurr == UNDERSCORE_CHAR) ? true : false;
 		}
 
 		// remove underscores
-		return camel.toString().replaceAll("" + underscore, "");
+		return camel.toString().replaceAll(UNDERSCORE_STR, EMPTY_STR);
 	}
 
 	/**
@@ -245,7 +257,7 @@ public final class DbHelper {
 	 */
 	public static String camelToSnake(String camel) {
 		if (camel == null || camel.isEmpty())
-			return "";
+			return EMPTY_STR;
 
 		StringBuffer snake = new StringBuffer(camel.length() + 5); // +5 for extra underscores
 		char charCurr = camel.charAt(0);
@@ -284,7 +296,7 @@ public final class DbHelper {
 		else
 			name = tmp + "s";
 
-		return camelToSnake(name.replaceAll("[^a-zA-Z0-9_]", ""));
+		return camelToSnake(name.replaceAll("[^a-zA-Z0-9_]", EMPTY_STR));
 	}
 
 	// Finds DB columns which will be mapped to model class fields.
@@ -308,7 +320,7 @@ public final class DbHelper {
 					pStFDesc = connection.prepareStatement(sqlDesc);
 					rSetDesc = pStFDesc.executeQuery();
 					FieldProperties fpDb = null;
-					StringBuilder regex = new StringBuilder("\\b(?<f>");
+					StringBuilder regex = new StringBuilder(REGEX_FIELD_NAME);
 
 					while (rSetDesc.next()) {
 						fpDb = new FieldProperties();
@@ -320,7 +332,7 @@ public final class DbHelper {
 
 					regex.replace(regex.length() - 1, regex.length(), ")\\b");
 					// add "operator operand" part and compile regex for class
-					regex.append("\\s{0,}(?<op>[!=<>][!=<>]?)\\s{0,}(['`](?<v1>[^'`]{0,})['`]|(?<v2>[^\\s]*))");
+					regex.append(REGEX_FIELD_OPERATOR_VALUE);
 					classInfo.fieldsPattern = Pattern.compile(regex.toString(),
 							Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 				} catch (Exception e) {
@@ -356,7 +368,6 @@ public final class DbHelper {
 						fp.field.setAccessible(true);
 						fp.fieldType = fp.field.getType().getSimpleName();
 					}
-
 				}
 
 				cachedClasses.put(klass.getName(), classInfo);
@@ -397,17 +408,17 @@ public final class DbHelper {
 
 		for (String column : fieldMap.keySet())
 			if (values.get(column) != null)
-				partWhere.append(" AND " + column + "=?");
+				partWhere.append("AND " + column + "=? ");
 
 		// ONLY count query should be allowed without a where condition
-		if (queryWithPlaceholder.indexOf(SELECT_COUNT) < 0 && partWhere.length() == 0) {
+		if (queryWithPlaceholder.indexOf(SELECT_COUNT_FROM) < 0 && partWhere.length() == 0) {
 			LOGGER.warning("Ignoring search without where condition. Query is: "
-					+ queryWithPlaceholder.replaceFirst(PLACEHOLDER_WHERE, " "));
+					+ queryWithPlaceholder.replaceFirst(PLACEHOLDER_WHERE, ""));
 			return null;
 		}
 
 		String query = queryWithPlaceholder.replaceFirst(PLACEHOLDER_WHERE,
-				partWhere.length() == 0 ? "" : " WHERE" + partWhere.toString().replaceFirst(" AND", ""));
+				partWhere.length() == 0 ? EMPTY_STR : WHERE_STR + partWhere.substring(4));
 		pStDynamic = connection.prepareStatement(query);
 
 		int idx = 1;
@@ -484,7 +495,7 @@ public final class DbHelper {
 		if (fieldMap.size() == 0)
 			return 0;
 
-		String sqlCount = SELECT_COUNT + "FROM " + tableName(klass) + PLACEHOLDER_WHERE;
+		String sqlCount = SELECT_COUNT_FROM + tableName(klass) + PLACEHOLDER_WHERE;
 		PreparedStatement pStCount = null;
 		ResultSet rSetCount = null;
 
@@ -514,9 +525,9 @@ public final class DbHelper {
 	 * @return 0 or number of records.
 	 */
 	public <T extends OrmModel> int count(Class<T> klass, String where) {
-		where = where == null || where.trim().length() == 0 ? "" : " WHERE " + where.trim();
+		where = where == null || (where = where.trim()).length() == 0 ? EMPTY_STR : WHERE_STR + where;
 
-		String sqlCount = SELECT_COUNT + "FROM " + tableName(klass) + where;
+		String sqlCount = SELECT_COUNT_FROM + tableName(klass) + where;
 		PreparedStatement pStCount = null;
 		ResultSet rSetCount = null;
 
@@ -652,7 +663,7 @@ public final class DbHelper {
 			return results;
 
 		// construct prepared statement dynamically
-		String query = "SELECT * FROM " + tableName(klass) + PLACEHOLDER_WHERE + " LIMIT "
+		String query = SELECT_ALL_FROM + tableName(klass) + PLACEHOLDER_WHERE + " LIMIT "
 				+ (findOne ? 1 : MAX_SELECT_LIMIT);
 		PreparedStatement pStFind = null;
 		ResultSet rSetFind = null;
@@ -726,16 +737,16 @@ public final class DbHelper {
 		if (fieldMap.size() == 0)
 			return results;
 
-		String partWhere = where == null || where.trim().length() == 0 ? ""
-				: " WHERE " + where.replaceAll(regWhereClean, "").trim();
-		String partOrderBy = orderBy == null || orderBy.trim().length() == 0 ? ""
-				: " ORDER BY " + orderBy.replaceAll(regGroupOrderClean, "").trim();
-		String limitBy = " LIMIT "
+		String partWhere = where == null || (where = where.trim()).length() == 0 ? EMPTY_STR
+				: WHERE_STR + where.replaceAll(REGEX_CLEAN_WHERE, EMPTY_STR);
+		String partOrderBy = orderBy == null || orderBy.trim().length() == 0 ? EMPTY_STR
+				: " ORDER BY " + orderBy.replaceAll(REGEX_CLEAN_GROUP_ORDER, EMPTY_STR).trim();
+		String partLimitBy = " LIMIT "
 				+ ((limitCount == null || limitCount < 1 || limitCount > MAX_SELECT_LIMIT) ? MAX_SELECT_LIMIT
 						: limitCount)
-				+ (limitOffset == null || limitOffset < 1 ? "" : " OFFSET " + limitOffset);
+				+ (limitOffset == null || limitOffset < 1 ? EMPTY_STR : " OFFSET " + limitOffset);
 
-		String query = "SELECT * FROM " + tableName(klass) + partWhere + partOrderBy + limitBy;
+		String query = SELECT_ALL_FROM + tableName(klass) + partWhere + partOrderBy + partLimitBy;
 		PreparedStatement pStFind = null;
 		ResultSet rSetFind = null;
 
@@ -781,7 +792,7 @@ public final class DbHelper {
 			return result;
 
 		Integer id = object.getId();
-		String query = "SELECT * FROM " + tableName(klass) + " WHERE id=?";
+		String query = SELECT_ALL_FROM + tableName(klass) + WHERE_STR + "id=?";
 		PreparedStatement pStFind = null;
 		ResultSet rSetFind = null;
 
@@ -829,10 +840,10 @@ public final class DbHelper {
 			return ids;
 
 		String partWhere = where != null && (where = where.trim()).length() > 0
-				? " WHERE " + where.replaceAll(regWhereClean, "")
-				: " ";
+				? WHERE_STR + where.replaceAll(REGEX_CLEAN_WHERE, EMPTY_STR)
+				: EMPTY_STR;
 
-		String query = "SELECT * FROM " + tableName(klass) + partWhere + " LIMIT " + MAX_SELECT_LIMIT_IDS;
+		String query = SELECT_ALL_FROM + tableName(klass) + partWhere + " LIMIT " + MAX_SELECT_LIMIT_IDS;
 		PreparedStatement pStFind = null;
 		ResultSet rSetFind = null;
 
@@ -963,8 +974,8 @@ public final class DbHelper {
 		String upsertResult = null;
 
 		sqlUpsert.append("INSERT INTO " + tableName(klass) + "(");
-		partValues.append("");
-		partOnDup.append(" ON DUPLICATE KEY UPDATE  ");
+		partValues.append(EMPTY_STR);
+		partOnDup.append(ON_DUPLICATE_KEY_UPDATE);
 
 		// timestamp values
 		if (values.get("id") == null && fpCreatedAt != null) // set created_at for a new record if model has it
@@ -1085,7 +1096,7 @@ public final class DbHelper {
 		}
 
 		String sqlUpsert = "INSERT INTO " + tableName(klass) + "(" + String.join(",", columns) + ") VALUES ("
-				+ String.join(",", partValues) + ") ON DUPLICATE KEY UPDATE " + String.join(",", partUpdate);
+				+ String.join(",", partValues) + ")" + ON_DUPLICATE_KEY_UPDATE + String.join(",", partUpdate);
 		PreparedStatement pStUpsert = null;
 
 		try {
@@ -1243,7 +1254,7 @@ public final class DbHelper {
 		PreparedStatement pStUpdate = null;
 		try {
 			// construct update statement
-			String sqlUpdate = "UPDATE " + tableName(klass) + " SET " + column + " = ? WHERE id = ?";
+			String sqlUpdate = UPDATE_STR + tableName(klass) + " SET " + column + " = ? WHERE id = ?";
 			pStUpdate = connection.prepareStatement(sqlUpdate);
 			pStUpdate.setObject(1, value);
 			pStUpdate.setObject(2, id);
@@ -1444,8 +1455,8 @@ public final class DbHelper {
 		int countDeleted = 0;
 		Class<? extends OrmModel> klass = object.getClass();
 
-		String where = " WHERE id=" + object.getId();
-		String sqlDelete = "DELETE FROM " + tableName(klass) + where;
+		String where = WHERE_STR + "id=" + object.getId();
+		String sqlDelete = DELETE_FROM + tableName(klass) + where;
 		PreparedStatement pStDelete = null;
 
 		try {
@@ -1499,7 +1510,7 @@ public final class DbHelper {
 		for (int i = 0, end = values.size(); i < end; i++)
 			partValues.append("?,");
 
-		String sqlDelete = "DELETE FROM " + tableName(klass) + " WHERE " + column.replaceAll("[^a-zA-Z0-9_]", "")
+		String sqlDelete = DELETE_FROM + tableName(klass) + WHERE_STR + column.replaceAll("[^a-zA-Z0-9_]", EMPTY_STR)
 				+ " IN (" + removeEndChar(partValues, ',') + ")";
 
 		try {
@@ -1639,7 +1650,7 @@ public final class DbHelper {
 		for (Integer id : idList)
 			ids.add(id.toString());
 
-		String sqlUpdate = "UPDATE " + tableName(klass) + " SET " + String.join(",", updates) + " WHERE id IN ("
+		String sqlUpdate = UPDATE_STR + tableName(klass) + " SET " + String.join(",", updates) + WHERE_STR + "id IN ("
 				+ String.join(",", ids) + ")";
 
 		try {

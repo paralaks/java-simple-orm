@@ -56,7 +56,7 @@ public abstract class OrmModel {
 	}
 
 	/**
-	 * Called by {@link #vpn.sel.mw.helper.DbHelper}'s find(...) functions to initialize and populate {@link #oldMap} which is used used by
+	 * Called by {@link #paralaks_gmail_com.simpleorm.helper.DbHelper}'s find(...) functions to initialize and populate {@link #oldMap} which is used used by
 	 * {@link #fieldChanged(String)} function.
 	 *
 	 * @param map
