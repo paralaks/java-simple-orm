@@ -11,3 +11,7 @@
 hs_err_pid*
 
 bin/
+
+\.idea/
+
+java-simple-orm\.iml
