@@ -29,207 +29,207 @@ import paralaks_gmail_com.simpleorm.helper.DbHelper;
 
 public class FakeOrmModel extends OrmModel {
 
-	private Boolean status;
-	private Integer total;
-	private String content;
-	private Date createdAt;
-	private Date updatedAt;
+  private Boolean status;
+  private Integer total;
+  private String content;
+  private Date createdAt;
+  private Date updatedAt;
 
-	private boolean skipValidation = true;
+  private boolean skipValidation = true;
 
-	public FakeOrmModel(DbHelper dbObject) {
-		super(dbObject);
-		initAllNull();
-	}
+  public FakeOrmModel(DbHelper dbObject) {
+    super(dbObject);
+    initAllNull();
+  }
 
-	public Boolean getStatus() {
-		return status;
-	}
+  public Boolean getStatus() {
+    return status;
+  }
 
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
+  public void setStatus(Boolean status) {
+    this.status = status;
+  }
 
-	public Integer getTotal() {
-		return total;
-	}
+  public Integer getTotal() {
+    return total;
+  }
 
-	public void setTotal(Integer total) {
-		this.total = total;
-	}
+  public void setTotal(Integer total) {
+    this.total = total;
+  }
 
-	public String getContent() {
-		return content;
-	}
+  public String getContent() {
+    return content;
+  }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
+  public Date getCreatedAt() {
+    return createdAt;
+  }
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
 
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
+  public Date getUpdatedAt() {
+    return updatedAt;
+  }
 
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+  public void setUpdatedAt(Date updatedAt) {
+    this.updatedAt = updatedAt;
+  }
 
-	public boolean getSkipValidation() {
-		return skipValidation;
-	}
+  public boolean getSkipValidation() {
+    return skipValidation;
+  }
 
-	public void setSkipValidation(boolean skipValidation) {
-		this.skipValidation = skipValidation;
-	}
+  public void setSkipValidation(boolean skipValidation) {
+    this.skipValidation = skipValidation;
+  }
 
-	private void initOldMap() {
-		oldMap = new HashMap<>();
-		if (id != null)
-			oldMap.put("id", id);
-		if (status != null)
-			oldMap.put("status", status);
-		if (total != null)
-			oldMap.put("total", total);
-		if (content != null)
-			oldMap.put("content", content);
-		if (createdAt != null)
-			oldMap.put("created_at", createdAt);
-		if (updatedAt != null)
-			oldMap.put("updated_at", updatedAt);
-	}
+  private void initOldMap() {
+    oldMap = new HashMap<>();
+    if (id != null)
+      oldMap.put("id", id);
+    if (status != null)
+      oldMap.put("status", status);
+    if (total != null)
+      oldMap.put("total", total);
+    if (content != null)
+      oldMap.put("content", content);
+    if (createdAt != null)
+      oldMap.put("created_at", createdAt);
+    if (updatedAt != null)
+      oldMap.put("updated_at", updatedAt);
+  }
 
-	public void initAllNull() {
-		errorMessages = null;
-		frozen = false;
+  public void initAllNull() {
+    errorMessages = null;
+    frozen = false;
 
-		id = null;
-		status = null;
-		total = null;
-		content = null;
-		createdAt = null;
-		updatedAt = null;
+    id = null;
+    status = null;
+    total = null;
+    content = null;
+    createdAt = null;
+    updatedAt = null;
 
-		initOldMap();
-	}
+    initOldMap();
+  }
 
-	public void initAllEmpty() {
-		errorMessages = null;
-		frozen = false;
+  public void initAllEmpty() {
+    errorMessages = null;
+    frozen = false;
 
-		id = null;
-		status = STATUS_EMPTY;
-		total = TOTAL_EMPTY;
-		content = CONTENT_EMPTY;
-		createdAt = DATE_EMPTY;
-		updatedAt = DATE_EMPTY;
+    id = null;
+    status = STATUS_EMPTY;
+    total = TOTAL_EMPTY;
+    content = CONTENT_EMPTY;
+    createdAt = DATE_EMPTY;
+    updatedAt = DATE_EMPTY;
 
-		initOldMap();
-	}
+    initOldMap();
+  }
 
-	public void initAllNotEmpty() {
-		errorMessages = null;
-		frozen = false;
+  public void initAllNotEmpty() {
+    errorMessages = null;
+    frozen = false;
 
-		id = ID_NOT_EMPTY;
-		status = STATUS_NOT_EMPTY;
-		total = TOTAL_NOT_EMPTY;
-		content = CONTENT_NOT_EMPTY;
-		createdAt = DATE_NOT_EMPTY;
-		updatedAt = DATE_NOT_EMPTY;
+    id = ID_NOT_EMPTY;
+    status = STATUS_NOT_EMPTY;
+    total = TOTAL_NOT_EMPTY;
+    content = CONTENT_NOT_EMPTY;
+    createdAt = DATE_NOT_EMPTY;
+    updatedAt = DATE_NOT_EMPTY;
 
-		initOldMap();
-	}
+    initOldMap();
+  }
 
-	@Override
-	public void beforeValidate() {
-		if (skipValidation)
-			return;
+  @Override
+  public void beforeValidate() {
+    if (skipValidation)
+      return;
 
-		if (total == null)
-			addError("total", ERROR_TOTAL);
-	}
+    if (total == null)
+      addError("total", ERROR_TOTAL);
+  }
 
-	@Override
-	public void validate() {
-		if (skipValidation)
-			return;
+  @Override
+  public void validate() {
+    if (skipValidation)
+      return;
 
-		if (status == null)
-			addError("status", ERROR_STATUS);
+    if (status == null)
+      addError("status", ERROR_STATUS);
 
-		if (id != null && createdAt != null && createdAt.getTime() > Calendar.getInstance().getTime().getTime())
-			addError("created_at", ERROR_CREATED_AT);
-	}
+    if (id != null && createdAt != null && createdAt.getTime() > Calendar.getInstance().getTime().getTime())
+      addError("created_at", ERROR_CREATED_AT);
+  }
 
-	@Override
-	public void beforeSave() {
-		if (skipValidation)
-			return;
+  @Override
+  public void beforeSave() {
+    if (skipValidation)
+      return;
 
-		if (content == null)
-			content = CONTENT_EMPTY;
-	}
+    if (content == null)
+      content = CONTENT_EMPTY;
+  }
 
-	@Override
-	public void onCreate() {
-		if (skipValidation)
-			return;
+  @Override
+  public void onCreate() {
+    if (skipValidation)
+      return;
 
-		if (content == null || content.isEmpty())
-			content = CONTENT_BY_ONCREATE;
-	}
+    if (content == null || content.isEmpty())
+      content = CONTENT_BY_ONCREATE;
+  }
 
-	@Override
-	public void onUpdate() {
-		if (skipValidation)
-			return;
+  @Override
+  public void onUpdate() {
+    if (skipValidation)
+      return;
 
-		content = CONTENT_BY_ONUPDATE;
-	}
+    content = CONTENT_BY_ONUPDATE;
+  }
 
-	@Override
-	public void afterSave() {
-		if (skipValidation)
-			return;
+  @Override
+  public void afterSave() {
+    if (skipValidation)
+      return;
 
-		if (id != null)
-			total = id + 1;
+    if (id != null)
+      total = id + 1;
 
-		if (id != null && id >= MAX_ID_LIMIT)
-			addAfterSaveError(ERROR_ID_MAXED_OUT);
-	}
+    if (id != null && id >= MAX_ID_LIMIT)
+      addAfterSaveError(ERROR_ID_MAXED_OUT);
+  }
 
-	@Override
-	public boolean beforeDestroy() {
-		if (id != null && id >= THRESHOLD_BEFORE_DESTROY_ID && id < THRESHOLD_BEFORE_DESTROY_ID + THRESHOLD_INTERVAL) {
-			addError("id", "beforeDestroyTest");
-			return false;
-		}
+  @Override
+  public boolean beforeDestroy() {
+    if (id != null && id >= THRESHOLD_BEFORE_DESTROY_ID && id < THRESHOLD_BEFORE_DESTROY_ID + THRESHOLD_INTERVAL) {
+      addError("id", "beforeDestroyTest");
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	@Override
-	public void afterDestroy() {
-		if (id != null && id >= THRESHOLD_AFTER_DESTROY_ID && id < THRESHOLD_AFTER_DESTROY_ID + THRESHOLD_INTERVAL) {
-			addError("id", "afterDestroyTest");
-		}
-	}
+  @Override
+  public void afterDestroy() {
+    if (id != null && id >= THRESHOLD_AFTER_DESTROY_ID && id < THRESHOLD_AFTER_DESTROY_ID + THRESHOLD_INTERVAL) {
+      addError("id", "afterDestroyTest");
+    }
+  }
 
-	@Override
-	public void afterFindAndLoad() {
-		if (id != null && id >= THRESHOLD_AFTER_FIND_AND_LOAD_ID
-				&& id < THRESHOLD_AFTER_FIND_AND_LOAD_ID + THRESHOLD_INTERVAL) {
-			addError("id", "afterFindAndLoadTest");
-		}
-	}
+  @Override
+  public void afterFindAndLoad() {
+    if (id != null && id >= THRESHOLD_AFTER_FIND_AND_LOAD_ID
+        && id < THRESHOLD_AFTER_FIND_AND_LOAD_ID + THRESHOLD_INTERVAL) {
+      addError("id", "afterFindAndLoadTest");
+    }
+  }
 
 }
