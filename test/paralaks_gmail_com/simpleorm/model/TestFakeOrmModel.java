@@ -419,8 +419,9 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
       stInsert.close();
     } catch (Exception e) {
       try {
-        if (stInsert != null && !stInsert.isClosed())
+        if (stInsert != null && !stInsert.isClosed()) {
           stInsert.close();
+        }
       } catch (Exception e2) {
       }
       assertNull(e.getMessage(), e);

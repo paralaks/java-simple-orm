@@ -92,18 +92,24 @@ public class FakeOrmModel extends OrmModel {
 
   private void initOldMap() {
     oldMap = new HashMap<>();
-    if (id != null)
+    if (id != null) {
       oldMap.put("id", id);
-    if (status != null)
+    }
+    if (status != null) {
       oldMap.put("status", status);
-    if (total != null)
+    }
+    if (total != null) {
       oldMap.put("total", total);
-    if (content != null)
+    }
+    if (content != null) {
       oldMap.put("content", content);
-    if (createdAt != null)
+    }
+    if (createdAt != null) {
       oldMap.put("created_at", createdAt);
-    if (updatedAt != null)
+    }
+    if (updatedAt != null) {
       oldMap.put("updated_at", updatedAt);
+    }
   }
 
   public void initAllNull() {
@@ -150,61 +156,74 @@ public class FakeOrmModel extends OrmModel {
 
   @Override
   public void beforeValidate() {
-    if (skipValidation)
+    if (skipValidation) {
       return;
+    }
 
-    if (total == null)
+    if (total == null) {
       addError("total", ERROR_TOTAL);
+    }
   }
 
   @Override
   public void validate() {
-    if (skipValidation)
+    if (skipValidation) {
       return;
+    }
 
-    if (status == null)
+    if (status == null) {
       addError("status", ERROR_STATUS);
+    }
 
-    if (id != null && createdAt != null && createdAt.getTime() > Calendar.getInstance().getTime().getTime())
+    if (id != null && createdAt != null && createdAt.getTime() > Calendar.getInstance().getTime().getTime()) {
       addError("created_at", ERROR_CREATED_AT);
+    }
   }
 
   @Override
   public void beforeSave() {
-    if (skipValidation)
+    if (skipValidation) {
       return;
+    }
 
-    if (content == null)
+    if (content == null) {
       content = CONTENT_EMPTY;
+    }
   }
 
   @Override
   public void onCreate() {
-    if (skipValidation)
+    if (skipValidation) {
       return;
+    }
 
-    if (content == null || content.isEmpty())
+    if (content == null || content.isEmpty()) {
       content = CONTENT_BY_ONCREATE;
+    }
   }
 
   @Override
   public void onUpdate() {
-    if (skipValidation)
+    if (skipValidation) {
       return;
+    }
 
     content = CONTENT_BY_ONUPDATE;
   }
 
   @Override
   public void afterSave() {
-    if (skipValidation)
+    if (skipValidation) {
       return;
+    }
 
-    if (id != null)
+    if (id != null) {
       total = id + 1;
+    }
 
-    if (id != null && id >= MAX_ID_LIMIT)
+    if (id != null && id >= MAX_ID_LIMIT) {
       addAfterSaveError(ERROR_ID_MAXED_OUT);
+    }
   }
 
   @Override

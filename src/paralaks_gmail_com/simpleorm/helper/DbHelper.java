@@ -104,8 +104,9 @@ public final class DbHelper {
   public static StringBuilder removeEndChar(StringBuilder string, char remove) {
     if (string != null && string.length() > 0) {
       int lastCharPos = string.length() - 1;
-      if (string.charAt(lastCharPos) == remove)
+      if (string.charAt(lastCharPos) == remove) {
         string.deleteCharAt(lastCharPos);
+      }
     }
 
     return string;
@@ -114,8 +115,9 @@ public final class DbHelper {
   public static String removeEndChar(String string, char remove) {
     if (string != null && string.length() > 0) {
       int lastCharPos = string.length() - 1;
-      if (string.charAt(lastCharPos) == remove)
+      if (string.charAt(lastCharPos) == remove) {
         string = string.substring(0, lastCharPos);
+      }
     }
 
     return string;
@@ -123,8 +125,9 @@ public final class DbHelper {
 
   public static <K, V> HashMap<K, V> initHashMap(K key, V value) {
     HashMap<K, V> newMap = new HashMap<>();
-    if (key != null)
+    if (key != null) {
       newMap.put(key, value);
+    }
 
     return newMap;
   }
@@ -139,19 +142,21 @@ public final class DbHelper {
     Statement stmnt = null;
     ResultSet rset = null;
 
-    if (connection != null)
+    if (connection != null) {
       try {
         String sqlMode = null;
         stmnt = connection.createStatement();
         rset = stmnt.executeQuery("SELECT @@SESSION.sql_mode");
-        if (rset.next())
+        if (rset.next()) {
           ansiSql = (sqlMode = rset.getString(1)) != null
               && sqlMode.toUpperCase().indexOf("ANSI_QUOTES") > -1;
+        }
       } catch (Exception e) {
         LOGGER.severe("Failed to get sql mode " + e.getStackTrace().toString());
       } finally {
         closeSqlObjects(rset, stmnt);
       }
+    }
   }
 
   /**
@@ -174,8 +179,9 @@ public final class DbHelper {
    */
   public void closeConnection() {
     try {
-      if (connection != null && !connection.isClosed())
+      if (connection != null && !connection.isClosed()) {
         connection.close();
+      }
     } catch (SQLException e) {
       LOGGER.severe(e.getStackTrace().toString());
     }
@@ -188,25 +194,29 @@ public final class DbHelper {
    * @param Multiple objects
    */
   public static void closeSqlObjects(Object... objects) {
-    for (Object o : objects)
+    for (Object o : objects) {
       try {
-        if (o != null)
-          if (o instanceof ResultSet)
+        if (o != null) {
+          if (o instanceof ResultSet) {
             ((ResultSet) o).close();
-          else if (o instanceof PreparedStatement)
+          } else if (o instanceof PreparedStatement) {
             ((PreparedStatement) o).close();
-          else if (o instanceof Statement)
+          } else if (o instanceof Statement) {
             ((Statement) o).close();
-          else
+          } else {
             LOGGER.severe("Unknown type passed to closeSqlObjects : " + o.getClass());
+          }
+        }
       } catch (Exception e) {
         LOGGER.severe(e.getStackTrace().toString());
       }
+    }
   }
 
   private static String _snakeToCamel(final String snake, final boolean isLower) {
-    if (snake == null || snake.isEmpty())
+    if (snake == null || snake.isEmpty()) {
       return EMPTY_STR;
+    }
 
     StringBuffer camel = new StringBuffer(snake.length());
 
@@ -256,8 +266,9 @@ public final class DbHelper {
    * @return null or parameter as snake case.
    */
   public static String camelToSnake(String camel) {
-    if (camel == null || camel.isEmpty())
+    if (camel == null || camel.isEmpty()) {
       return EMPTY_STR;
+    }
 
     StringBuffer snake = new StringBuffer(camel.length() + 5); // +5 for extra underscores
     char charCurr = camel.charAt(0);
@@ -288,13 +299,15 @@ public final class DbHelper {
 
     // pesky names
     if (tmp.endsWith("Key")) // ApiKey causes trouble
+    {
       name = tmp + "s";
-    else if (tmp.endsWith("y"))
+    } else if (tmp.endsWith("y")) {
       name = tmp.substring(0, tmp.length() - 1) + "ies";
-    else if (tmp.endsWith("s"))
+    } else if (tmp.endsWith("s")) {
       name = tmp + "es";
-    else
+    } else {
       name = tmp + "s";
+    }
 
     return camelToSnake(name.replaceAll("[^a-zA-Z0-9_]", EMPTY_STR));
   }
@@ -360,8 +373,9 @@ public final class DbHelper {
           for (int j = 0, endJ = fields.length; j < endJ; j++) {
             fieldNameSnake = camelToSnake(fields[j].getName());
 
-            if (!classInfo.fieldMap.containsKey(fieldNameSnake))
+            if (!classInfo.fieldMap.containsKey(fieldNameSnake)) {
               continue;
+            }
 
             fp = classInfo.fieldMap.get(fieldNameSnake);
             fp.field = fields[j];
@@ -393,22 +407,25 @@ public final class DbHelper {
 
   // helper to construct prepared statement using object fields with non-null values
   private <T extends OrmModel> PreparedStatement prepareWhereAndStatement(T object,
-                                                                          HashMap<String, FieldProperties> fieldMap, String queryWithPlaceholder) throws SQLException {
+      HashMap<String, FieldProperties> fieldMap, String queryWithPlaceholder) throws SQLException {
     StringBuilder partWhere = new StringBuilder(150);
     PreparedStatement pStDynamic = null;
     HashMap<String, Object> values = new HashMap<>();
     // pull field values from object
-    for (FieldProperties fp : fieldMap.values())
+    for (FieldProperties fp : fieldMap.values()) {
       try {
         values.put(fp.fieldName, fp.field.get(object));
       } catch (Exception e) {
         values.put(fp.fieldName, null);
         LOGGER.warning(e.getStackTrace().toString());
       }
+    }
 
-    for (String column : fieldMap.keySet())
-      if (values.get(column) != null)
+    for (String column : fieldMap.keySet()) {
+      if (values.get(column) != null) {
         partWhere.append("AND " + column + "=? ");
+      }
+    }
 
     // ONLY count query should be allowed without a where condition
     if (queryWithPlaceholder.indexOf(SELECT_COUNT_FROM) < 0 && partWhere.length() == 0) {
@@ -422,9 +439,11 @@ public final class DbHelper {
     pStDynamic = connection.prepareStatement(query);
 
     int idx = 1;
-    for (String column : fieldMap.keySet())
-      if (values.get(column) != null)
+    for (String column : fieldMap.keySet()) {
+      if (values.get(column) != null) {
         pStDynamic.setObject(idx++, values.get(column));
+      }
+    }
 
     LOGGER.info(getQueryForLog(pStDynamic));
 
@@ -455,11 +474,12 @@ public final class DbHelper {
       Object value = matcher.group("v1") == null ? matcher.group("v2") : matcher.group("v1");
 
       // null value fix
-      if (value == null || value.toString().equals("null"))
+      if (value == null || value.toString().equals("null")) {
         partWhere = partWhere.replaceFirst(matcher.group("f") + matcher.group("op") + "\\?",
             matcher.group("f") + " IS NULL ");
-      else
+      } else {
         values.add(value);
+      }
     }
 
     // replace uses regex which might mess with the query.
@@ -468,8 +488,9 @@ public final class DbHelper {
     // System.out.println("Where before: " + where + "\nWhere after: " + partWhere);
 
     pStDynamic = connection.prepareStatement(querySt.toString());
-    for (int i = 0, end = values.size(); i < end; i++)
+    for (int i = 0, end = values.size(); i < end; i++) {
       pStDynamic.setObject(i + 1, values.get(i));
+    }
 
     LOGGER.info(getQueryForLog(pStDynamic));
 
@@ -485,15 +506,17 @@ public final class DbHelper {
    * @return 0 or actual count from database table representing the object class.
    */
   public <T extends OrmModel> int count(T object) {
-    if (object == null)
+    if (object == null) {
       return 0;
+    }
 
     Class<? extends OrmModel> klass = object.getClass();
     HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
 
     // no recognized type
-    if (fieldMap.size() == 0)
+    if (fieldMap.size() == 0) {
       return 0;
+    }
 
     String sqlCount = SELECT_COUNT_FROM + tableName(klass) + PLACEHOLDER_WHERE;
     PreparedStatement pStCount = null;
@@ -502,12 +525,14 @@ public final class DbHelper {
     // construct select statement and execute
     try {
       pStCount = prepareWhereAndStatement(object, fieldMap, sqlCount);
-      if (pStCount == null)
+      if (pStCount == null) {
         return 0;
+      }
 
       rSetCount = pStCount.executeQuery();
-      if (rSetCount.next())
+      if (rSetCount.next()) {
         return rSetCount.getInt(1);
+      }
     } catch (Exception e) {
       LOGGER.severe(e.getStackTrace().toString());
     } finally {
@@ -536,8 +561,9 @@ public final class DbHelper {
       pStCount = prepareStatementFromQuery(klass, sqlCount, where);
       rSetCount = pStCount.executeQuery();
 
-      if (rSetCount.next())
+      if (rSetCount.next()) {
         return rSetCount.getInt(1);
+      }
     } catch (Exception e) {
       LOGGER.severe(e.getStackTrace().toString());
     } finally {
@@ -560,21 +586,24 @@ public final class DbHelper {
   // populates first object's oldmap which can be used to check whether an field value was changed after it was loaded by find.
   // Also executes afterFindAndLoad function for the first object in the list.
   private <T extends OrmModel> void callbacksForFind(List<T> results, HashMap<String, FieldProperties> fieldMap) {
-    if (results.size() == 0)
+    if (results.size() == 0) {
       return;
+    }
 
     HashMap<String, Object> map = new HashMap<>();
     T firstItem = results.get(0);
     Object fieldValue = null;
-    for (FieldProperties fp : fieldMap.values())
+    for (FieldProperties fp : fieldMap.values()) {
       try {
         fieldValue = fp.field.get(firstItem);
 
-        if (fieldValue != null)
+        if (fieldValue != null) {
           map.put(fp.fieldName, fieldValue);
+        }
       } catch (Exception e) {
         LOGGER.severe(e.getStackTrace().toString());
       }
+    }
 
     firstItem.setOldMap(map);
     firstItem.afterFindAndLoad();
@@ -591,10 +620,11 @@ public final class DbHelper {
    * @throws Exception
    */
   public <T extends OrmModel> void assignResultSetToListOrObject(ResultSet resultSet, List<T> results,
-                                                                 Class<? extends OrmModel> klass, T object) throws Exception {
+      Class<? extends OrmModel> klass, T object) throws Exception {
 
-    if (results == null && object == null)
+    if (results == null && object == null) {
       return;
+    }
 
     klass = object != null ? object.getClass() : klass;
     HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
@@ -605,45 +635,51 @@ public final class DbHelper {
 
     // why this? Before loadFrom() calls, rSet.next() function should already be executed and we will skip records.. ouch!
     boolean validResultset = true;
-    if (results != null)
+    if (results != null) {
       validResultset = resultSet.next() ? true : false;
+    }
 
-    if (validResultset)
+    if (validResultset) {
       do {
         @SuppressWarnings("unchecked")
         T newObj = results != null ? (T) klass.getConstructor(DbHelper.class).newInstance(this) : object;
-        for (int i = 1, end = metas.getColumnCount() + 1; i < end; i++)
+        for (int i = 1, end = metas.getColumnCount() + 1; i < end; i++) {
           try {
             metaColumName = metas.getColumnLabel(i);
-            if (!fieldMap.containsKey(metaColumName))
+            if (!fieldMap.containsKey(metaColumName)) {
               continue;
+            }
 
             dbValue = resultSet.getObject(i);
             fp = fieldMap.get(metaColumName);
             fp.field.set(newObj, null);
 
             if (dbValue != null) {
-              if (fp.fieldType.equals("Integer"))
+              if (fp.fieldType.equals("Integer")) {
                 fp.field.set(newObj, resultSet.getInt(i));
-              else if (fp.fieldType.equals("String"))
+              } else if (fp.fieldType.equals("String")) {
                 fp.field.set(newObj, resultSet.getString(i));
-              else if (fp.fieldType.equals("Date"))
+              } else if (fp.fieldType.equals("Date")) {
                 fp.field.set(newObj, DATE_FORMAT.parse(resultSet.getString(i)));
-              else if (fp.fieldType.equals("Boolean"))
+              } else if (fp.fieldType.equals("Boolean")) {
                 fp.field.set(newObj, resultSet.getBoolean(i));
-              else
+              } else {
                 fp.field.set(newObj, dbValue);
+              }
             }
           } catch (Exception e) {
             LOGGER.severe(e.getStackTrace().toString());
           }
+        }
 
-        if (results != null)
+        if (results != null) {
           results.add(newObj);
-        else
+        } else {
           break;
+        }
 
       } while (resultSet.next());
+    }
   }
 
 
@@ -652,15 +688,17 @@ public final class DbHelper {
   private <T extends OrmModel> List<T> _find(Connection connection, T object, boolean findOne) {
     List<T> results = new ArrayList<>();
 
-    if (object == null)
+    if (object == null) {
       return results;
+    }
 
     Class<? extends OrmModel> klass = object.getClass();
     HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
 
     // no recognized type
-    if (fieldMap.size() == 0)
+    if (fieldMap.size() == 0) {
       return results;
+    }
 
     // construct prepared statement dynamically
     String query = SELECT_ALL_FROM + tableName(klass) + PLACEHOLDER_WHERE + " LIMIT "
@@ -670,12 +708,14 @@ public final class DbHelper {
 
     try {
       pStFind = prepareWhereAndStatement(object, fieldMap, query);
-      if (pStFind == null)
+      if (pStFind == null) {
         return results;
+      }
 
       rSetFind = pStFind.executeQuery();
-      if (rSetFind == null)
+      if (rSetFind == null) {
         return results;
+      }
 
       assignResultSetToListOrObject(rSetFind, results, klass, null);
 
@@ -686,8 +726,9 @@ public final class DbHelper {
     }
 
     // being called for find(() so execute callbacks
-    if (findOne)
+    if (findOne) {
       callbacksForFind(results, fieldMap);
+    }
 
     return results;
   }
@@ -726,16 +767,18 @@ public final class DbHelper {
    * @return An empty list or a list of maximum limitCount or {@link #MAX_SELECT_LIMIT} objects.
    */
   public <T extends OrmModel> List<T> findAll(Class<T> klass, String where, String orderBy, Integer limitOffset,
-                                              Integer limitCount) {
+      Integer limitCount) {
     List<T> results = new ArrayList<>();
-    if (klass == null)
+    if (klass == null) {
       return results;
+    }
 
     HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
 
     // no recognized type
-    if (fieldMap.size() == 0)
+    if (fieldMap.size() == 0) {
       return results;
+    }
 
     String partWhere = where == null || (where = where.trim()).length() == 0 ? EMPTY_STR
         : WHERE_STR + where.replaceAll(REGEX_CLEAN_WHERE, EMPTY_STR);
@@ -754,8 +797,9 @@ public final class DbHelper {
       pStFind = prepareStatementFromQuery(klass, query, partWhere);
       rSetFind = pStFind.executeQuery();
 
-      if (rSetFind == null)
+      if (rSetFind == null) {
         return results;
+      }
 
       assignResultSetToListOrObject(rSetFind, results, klass, null);
 
@@ -766,8 +810,9 @@ public final class DbHelper {
     }
 
     // being called for find() so execute callbacks
-    if (limitOffset != null && limitCount != null && limitOffset.equals(0) && limitCount.equals(1))
+    if (limitOffset != null && limitCount != null && limitOffset.equals(0) && limitCount.equals(1)) {
       callbacksForFind(results, fieldMap);
+    }
 
     return results;
   }
@@ -781,15 +826,17 @@ public final class DbHelper {
    */
   public <T extends OrmModel> boolean reload(T object) {
     boolean result = false;
-    if (object == null || object.getId() == null || object.isFrozen())
+    if (object == null || object.getId() == null || object.isFrozen()) {
       return result;
+    }
 
     Class<? extends OrmModel> klass = object.getClass();
     HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
 
     // no recognized type
-    if (fieldMap.size() == 0)
+    if (fieldMap.size() == 0) {
       return result;
+    }
 
     Integer id = object.getId();
     String query = SELECT_ALL_FROM + tableName(klass) + WHERE_STR + "id=?";
@@ -797,8 +844,9 @@ public final class DbHelper {
     ResultSet rSetFind = null;
 
     try {
-      for (FieldProperties fp : fieldMap.values())
+      for (FieldProperties fp : fieldMap.values()) {
         fp.field.set(object, null);
+      }
 
       pStFind = connection.prepareStatement(query);
       pStFind.setInt(1, id);
@@ -806,8 +854,9 @@ public final class DbHelper {
       LOGGER.info(getQueryForLog(pStFind));
 
       rSetFind = pStFind.executeQuery();
-      if (rSetFind.next())
+      if (rSetFind.next()) {
         assignResultSetToListOrObject(rSetFind, null, klass, object);
+      }
 
       object.setOldMap(object.fields());
       object.afterFindAndLoad();
@@ -830,14 +879,16 @@ public final class DbHelper {
    */
   public <T extends OrmModel> List<Integer> findIds(Class<T> klass, String where) {
     List<Integer> ids = new ArrayList<>();
-    if (klass == null)
+    if (klass == null) {
       return ids;
+    }
 
     HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
 
     // no recognized type
-    if (fieldMap.size() == 0)
+    if (fieldMap.size() == 0) {
       return ids;
+    }
 
     String partWhere = where != null && (where = where.trim()).length() > 0
         ? WHERE_STR + where.replaceAll(REGEX_CLEAN_WHERE, EMPTY_STR)
@@ -851,10 +902,12 @@ public final class DbHelper {
       pStFind = prepareStatementFromQuery(klass, query, partWhere);
       rSetFind = pStFind.executeQuery();
 
-      if (rSetFind == null)
+      if (rSetFind == null) {
         return ids;
-      while (rSetFind.next())
+      }
+      while (rSetFind.next()) {
         ids.add(rSetFind.getInt(1));
+      }
 
     } catch (Exception e) {
       LOGGER.severe(e.getStackTrace().toString());
@@ -936,15 +989,17 @@ public final class DbHelper {
    * @return null or error message
    */
   public <T extends OrmModel> String save(T object) {
-    if (object == null)
+    if (object == null) {
       return "Null object can not be saved";
+    }
 
     Class<? extends OrmModel> klass = object.getClass();
     HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
 
     // no recognized type
-    if (fieldMap.size() == 0)
+    if (fieldMap.size() == 0) {
       return "Object has no recognized fields to save";
+    }
 
     HashMap<String, Object> oldMap = object.getOldMap();
     FieldProperties fpCreatedAt = fieldMap.get("created_at");
@@ -952,17 +1007,19 @@ public final class DbHelper {
 
     HashMap<String, Object> values = new HashMap<>();
     // pull field values from object
-    for (FieldProperties fp : fieldMap.values())
+    for (FieldProperties fp : fieldMap.values()) {
       try {
         // id can not be changed once set
-        if (fp.fieldName.equals("id") && !object.fieldWas("id", null) && object.fieldChanged("id"))
+        if (fp.fieldName.equals("id") && !object.fieldWas("id", null) && object.fieldChanged("id")) {
           values.put("id", object.getOldValue("id"));
-        else
+        } else {
           values.put(fp.fieldName, fp.field.get(object));
+        }
       } catch (Exception e) {
         values.put(fp.fieldName, null);
         LOGGER.warning(e.getStackTrace().toString());
       }
+    }
 
     PreparedStatement pStUpsert = null;
     ResultSet keys = null;
@@ -979,32 +1036,40 @@ public final class DbHelper {
 
     // timestamp values
     if (values.get("id") == null && fpCreatedAt != null) // set created_at for a new record if model has it
+    {
       values.put("created_at", now);
+    }
     if (fpUpdatedAt != null) // set updated_at if model has it
+    {
       values.put("updated_at", now);
+    }
 
-    for (String column : fieldMap.keySet())
+    for (String column : fieldMap.keySet()) {
       if (values.get(column) != null) {
         sqlUpsert.append(column + ",");
         partValues.append("?,");
-        if (column.equals("id"))
+        if (column.equals("id")) {
           partOnDup.append("id=LAST_INSERT_ID(id),");
-        else
+        } else {
           partOnDup.append(column + "=VALUES(" + column + "),");
+        }
       }
+    }
 
     boolean isBlankObject = partValues.length() == 0 ? true : false;
 
     // object with all fields null? Save it
-    if (isBlankObject)
+    if (isBlankObject) {
       for (String column : fieldMap.keySet()) {
         sqlUpsert.append(column + ",");
         partValues.append("?,");
-        if (column.equals("id"))
+        if (column.equals("id")) {
           partOnDup.append("id=LAST_INSERT_ID(id),");
-        else
+        } else {
           partOnDup.append(column + "=VALUES(" + column + "),");
+        }
       }
+    }
 
 
     // remove trailing commas
@@ -1018,11 +1083,13 @@ public final class DbHelper {
       pStUpsert = connection.prepareStatement(sqlUpsert.toString(), Statement.RETURN_GENERATED_KEYS);
 
       int idx = 1;
-      for (FieldProperties fp : fieldMap.values())
-        if (isBlankObject)
+      for (FieldProperties fp : fieldMap.values()) {
+        if (isBlankObject) {
           pStUpsert.setObject(idx++, null);
-        else if (values.get(fp.fieldName) != null)
+        } else if (values.get(fp.fieldName) != null) {
           pStUpsert.setObject(idx++, values.get(fp.fieldName));
+        }
+      }
 
       LOGGER.info(getQueryForLog(pStUpsert));
 
@@ -1032,21 +1099,26 @@ public final class DbHelper {
       keys = pStUpsert.getGeneratedKeys();
       if (keys.next()) {
         FieldProperties idProps = fieldMap.get("id");
-        if (idProps != null)
-          if (idProps.fieldType.equals("Integer"))
+        if (idProps != null) {
+          if (idProps.fieldType.equals("Integer")) {
             idProps.field.set(object, keys.getInt("GENERATED_KEY"));
-          else if (idProps.fieldType.equals("Long"))
+          } else if (idProps.fieldType.equals("Long")) {
             idProps.field.set(object, keys.getLong("GENERATED_KEY"));
-          else if (idProps.fieldType.equals("Short"))
+          } else if (idProps.fieldType.equals("Short")) {
             idProps.field.set(object, keys.getShort("GENERATED_KEY"));
-          else
+          } else {
             idProps.field.set(object, keys.getByte("GENERATED_KEY"));
+          }
+        }
       }
       // set created and updated at fields
-      if (values.get("id") == null && fpCreatedAt != null)
+      if (values.get("id") == null && fpCreatedAt != null) {
         fpCreatedAt.field.set(object, now);
+      }
       if (fpUpdatedAt != null) // set updated_at if model has it
+      {
         fpUpdatedAt.field.set(object, now);
+      }
 
       object.setOldMap(object.fields());
     } catch (Exception e) {
@@ -1070,10 +1142,11 @@ public final class DbHelper {
    * @return true if all records are saved successfully; false otherwise.
    */
   public boolean importRows(Class<? extends OrmModel> klass, String[] columns, List<Object[]> rows,
-                            String[] onDuplicateUpdateColumns) {
+      String[] onDuplicateUpdateColumns) {
     // TODO: switches like :  boolean validate,	boolean useTimestamps
-    if (klass == null || columns == null || columns.length == 0 || rows == null || rows.size() == 0)
+    if (klass == null || columns == null || columns.length == 0 || rows == null || rows.size() == 0) {
       return false;
+    }
 
     boolean result = true;
 
@@ -1082,17 +1155,21 @@ public final class DbHelper {
     List<String> partUpdate = new ArrayList<>();
 
     HashSet<String> updateColumns = new HashSet<>();
-    if (onDuplicateUpdateColumns != null && onDuplicateUpdateColumns.length > 0)
-      for (String column : onDuplicateUpdateColumns)
+    if (onDuplicateUpdateColumns != null && onDuplicateUpdateColumns.length > 0) {
+      for (String column : onDuplicateUpdateColumns) {
         updateColumns.add(column);
-    else
-      for (String col : columns)
+      }
+    } else {
+      for (String col : columns) {
         updateColumns.add(col);
+      }
+    }
 
     for (String column : columns) {
       partValues.add("?");
-      if (updateColumns.contains(column))
+      if (updateColumns.contains(column)) {
         partUpdate.add(column + "=VALUES(" + column + ")");
+      }
     }
 
     String sqlUpsert = "INSERT INTO " + tableName(klass) + "(" + String.join(",", columns) + ") VALUES ("
@@ -1109,8 +1186,9 @@ public final class DbHelper {
           continue;
         }
 
-        for (int i = 0, end = columns.length; i < end; i++)
+        for (int i = 0, end = columns.length; i < end; i++) {
           pStUpsert.setObject(i + 1, row[i]);
+        }
         pStUpsert.addBatch();
 
         LOGGER.info(getQueryForLog(pStUpsert));
@@ -1151,27 +1229,32 @@ public final class DbHelper {
   public <T extends OrmModel> HashMap<String, Object> fieldsFor(T object, List<String> fieldsList) {
     HashMap<String, Object> fields = new LinkedHashMap<>(); // preserve field order with LinkedHashMap
 
-    if (object == null || fieldsList == null || fieldsList.size() == 0)
+    if (object == null || fieldsList == null || fieldsList.size() == 0) {
       return fields;
+    }
 
     HashMap<String, FieldProperties> fieldMap = getClassFields(object.getClass());
 
     // no recognized type
-    if (fieldMap.size() == 0)
+    if (fieldMap.size() == 0) {
       return fields;
+    }
 
     FieldProperties fp = null;
 
     // pull field values from object
-    for (String field : fieldsList)
-      if ((fp = fieldMap.get(field)) != null)
+    for (String field : fieldsList) {
+      if ((fp = fieldMap.get(field)) != null) {
         try {
           Object value = fp.field.get(object);
-          if (value != null)
+          if (value != null) {
             fields.put(field, fp.field.get(object));
+          }
         } catch (Exception e) {
           LOGGER.warning(e.getStackTrace().toString());
         }
+      }
+    }
 
     return fields;
   }
@@ -1198,27 +1281,31 @@ public final class DbHelper {
   public <T extends OrmModel> HashMap<String, Object> fields(T object, List<String> excludedFieldsList) {
     HashMap<String, Object> fields = new HashMap<>();
 
-    if (object == null)
+    if (object == null) {
       return fields;
+    }
 
     HashMap<String, FieldProperties> fieldMap = getClassFields(object.getClass());
 
     // no recognized type
-    if (fieldMap.size() == 0)
+    if (fieldMap.size() == 0) {
       return fields;
+    }
 
     HashSet<String> excludes = excludedFieldsList == null ? new HashSet<>() : new HashSet<>(excludedFieldsList);
 
     // pull field values from object
     fieldMap.forEach((field, fp) -> {
-      if (field != null && !excludes.contains(field))
+      if (field != null && !excludes.contains(field)) {
         try {
           Object value = fp.field.get(object);
-          if (value != null)
+          if (value != null) {
             fields.put(field, fp.field.get(object));
+          }
         } catch (Exception e) {
           LOGGER.warning(e.getStackTrace().toString());
         }
+      }
     });
 
     return fields;
@@ -1246,10 +1333,11 @@ public final class DbHelper {
    * @return true for successful update; false otherwise
    */
   public <T extends OrmModel> boolean updateColumn(Class<? extends OrmModel> klass, Integer id, String column,
-                                                   Object value) {
+      Object value) {
     if (klass == null || id == null || column == null || column.isEmpty() || column.equalsIgnoreCase("id")
-        || column.equalsIgnoreCase("created_at"))
+        || column.equalsIgnoreCase("created_at")) {
       return false;
+    }
 
     PreparedStatement pStUpdate = null;
     try {
@@ -1261,8 +1349,9 @@ public final class DbHelper {
 
       LOGGER.info(getQueryForLog(pStUpdate));
 
-      if (pStUpdate.executeUpdate() == 1)
+      if (pStUpdate.executeUpdate() == 1) {
         return true;
+      }
     } catch (Exception e) {
       LOGGER.severe(e.getStackTrace().toString());
     } finally {
@@ -1282,30 +1371,35 @@ public final class DbHelper {
    * @return true for successful update; false otherwise
    */
   public <T extends OrmModel> boolean updateColumn(T object, String column, Object value) {
-    if (object == null || column == null)
+    if (object == null || column == null) {
       return false;
+    }
 
     Class<? extends OrmModel> klass = object.getClass();
     HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
-    if (fieldMap.size() == 0)
+    if (fieldMap.size() == 0) {
       return false;
+    }
 
     FieldProperties fpColumn = fieldMap.get(column);
-    if (fpColumn == null)
+    if (fpColumn == null) {
       return false;
+    }
 
     boolean result = updateColumn(klass, object.getId(), column, value);
-    if (result)
+    if (result) {
       try {
         fpColumn.field.set(object, null);
 
-        if (fpColumn.fieldType.equals("Date") && value != null && value instanceof String)
+        if (fpColumn.fieldType.equals("Date") && value != null && value instanceof String) {
           fpColumn.field.set(object, DATE_FORMAT.parse((String) value));
-        else
+        } else {
           fpColumn.field.set(object, value);
+        }
       } catch (Exception e) {
         LOGGER.severe(e.getStackTrace().toString());
       }
+    }
 
     return result;
   }
@@ -1321,8 +1415,9 @@ public final class DbHelper {
     HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
 
     // no recognized type
-    if (fieldMap.size() == 0)
+    if (fieldMap.size() == 0) {
       return klass.getSimpleName() + "[]";
+    }
 
     StringBuilder asString = new StringBuilder(fieldMap.size() * 30); // 25 chars per field name and value initially
     asString.append(klass.getSimpleName() + " [");
@@ -1330,7 +1425,7 @@ public final class DbHelper {
     String fieldName = null;
     Object fieldValue = null;
     // pull field values from object
-    for (FieldProperties fp : fieldMap.values())
+    for (FieldProperties fp : fieldMap.values()) {
       try {
         fieldName = fp.field.getName();
         fieldValue = fieldName.toLowerCase().indexOf("password") > -1 ? "*****" : fp.field.get(object);
@@ -1339,6 +1434,7 @@ public final class DbHelper {
       } catch (Exception e) {
         LOGGER.warning(e.getStackTrace().toString());
       }
+    }
 
     return asString.substring(0, asString.length() - 2) + ']';
   }
@@ -1350,8 +1446,9 @@ public final class DbHelper {
    * @param resultSet
    */
   public <T extends OrmModel> boolean loadFrom(T object, ResultSet resultSet) {
-    if (object == null || resultSet == null || object.isFrozen())
+    if (object == null || resultSet == null || object.isFrozen()) {
       return false;
+    }
 
     try {
       assignResultSetToListOrObject(resultSet, null, null, object);
@@ -1370,16 +1467,17 @@ public final class DbHelper {
    * @param fieldValueMap
    */
   public <T extends OrmModel> boolean loadFrom(T object, HashMap<String, Object> fieldValueMap) {
-    if (object == null || fieldValueMap == null || object.isFrozen())
+    if (object == null || fieldValueMap == null || object.isFrozen()) {
       return false;
+    }
 
     int fieldCount = 0;
     HashMap<String, FieldProperties> fieldMap = getClassFields(object.getClass());
 
-    for (String fieldName : fieldValueMap.keySet())
-      if (fieldName == null || (fieldName = fieldName.toLowerCase()).isEmpty())
+    for (String fieldName : fieldValueMap.keySet()) {
+      if (fieldName == null || (fieldName = fieldName.toLowerCase()).isEmpty()) {
         continue;
-      else if (fieldMap.containsKey(fieldName))
+      } else if (fieldMap.containsKey(fieldName)) {
         try {
           FieldProperties fp = fieldMap.get(fieldName);
           Object value = fieldValueMap.get(fieldName);
@@ -1390,28 +1488,31 @@ public final class DbHelper {
             String stringValue = value.toString();
             String trimmedValue = stringValue.trim();
 
-            if (fp.fieldType.equals("Integer"))
+            if (fp.fieldType.equals("Integer")) {
               try {
                 fp.field.set(object, new Integer(trimmedValue));
               } catch (Exception e1) {
                 fp.field.set(object, trimmedValue.equalsIgnoreCase("true") ? 1 : 0);
               }
-            else if (fp.fieldType.equals("String"))
+            } else if (fp.fieldType.equals("String")) {
               fp.field.set(object, stringValue);
-            else if (fp.fieldType.equals("Date") && (value instanceof String))
+            } else if (fp.fieldType.equals("Date") && (value instanceof String)) {
               fp.field.set(object, DATE_FORMAT.parse(trimmedValue));
-            else if (fp.fieldType.equals("Boolean"))
+            } else if (fp.fieldType.equals("Boolean")) {
               try {
                 fp.field.set(object, Boolean.parseBoolean(trimmedValue));
               } catch (Exception e1) {
                 fp.field.set(object, trimmedValue.equalsIgnoreCase("true"));
               }
-            else
+            } else {
               fp.field.set(object, value);
+            }
           }
         } catch (Exception e) {
           LOGGER.severe(e.getStackTrace().toString());
         }
+      }
+    }
 
     return fieldCount > 0;
   }
@@ -1424,8 +1525,9 @@ public final class DbHelper {
    * @return true if field value changed; false otherwise.
    */
   public <T extends OrmModel> boolean fieldChanged(T object, String fieldName) {
-    if (object == null || fieldName == null || fieldName.isEmpty())
+    if (object == null || fieldName == null || fieldName.isEmpty()) {
       return false;
+    }
 
     try {
       FieldProperties fp = getClassFields(object.getClass()).get(fieldName);
@@ -1449,8 +1551,9 @@ public final class DbHelper {
    * @return true when object is deleted successfully; false otherwise
    */
   public <T extends OrmModel> boolean delete(T object) {
-    if (object == null || object.getId() == null)
+    if (object == null || object.getId() == null) {
       return false;
+    }
 
     int countDeleted = 0;
     Class<? extends OrmModel> klass = object.getClass();
@@ -1484,8 +1587,9 @@ public final class DbHelper {
   @SuppressWarnings("unchecked")
   public <T extends Object> boolean deleteAll(Class<? extends OrmModel> klass, String column, T... values) {
 
-    if (values == null || values.length == 0)
+    if (values == null || values.length == 0) {
       return false;
+    }
 
     return deleteAll(klass, column, Arrays.asList(values));
   }
@@ -1500,15 +1604,17 @@ public final class DbHelper {
    * @return true when matching records are deleted successfully; false otherwise
    */
   public <T extends Object> boolean deleteAll(Class<? extends OrmModel> klass, String column, List<T> values) {
-    if (klass == null || column == null || (column = column.trim()).isEmpty() || values == null || values.isEmpty())
+    if (klass == null || column == null || (column = column.trim()).isEmpty() || values == null || values.isEmpty()) {
       return false;
+    }
 
     int countDeleted = 0;
     PreparedStatement pStDelete = null;
 
     StringBuilder partValues = new StringBuilder(values.size() * 2);
-    for (int i = 0, end = values.size(); i < end; i++)
+    for (int i = 0, end = values.size(); i < end; i++) {
       partValues.append("?,");
+    }
 
     String sqlDelete = DELETE_FROM + tableName(klass) + WHERE_STR + column.replaceAll("[^a-zA-Z0-9_]", EMPTY_STR)
         + " IN (" + removeEndChar(partValues, ',') + ")";
@@ -1516,13 +1622,14 @@ public final class DbHelper {
     try {
       pStDelete = connection.prepareStatement(sqlDelete);
 
-      for (int i = 0, end = values.size(); i < end; i++)
+      for (int i = 0, end = values.size(); i < end; i++) {
         try {
           pStDelete.setObject(i + 1, values.get(i));
         } catch (Exception e) {
           pStDelete.setObject(i + 1, null);
           LOGGER.severe(e.getStackTrace().toString());
         }
+      }
 
       LOGGER.info(getQueryForLog(pStDelete));
 
@@ -1597,8 +1704,9 @@ public final class DbHelper {
    * @return escaped value
    */
   public static String escape(String value, boolean isAnsiSql) {
-    if (value == null)
+    if (value == null) {
       return null;
+    }
 
     // @formatter:off
     value = value.trim()
@@ -1608,17 +1716,20 @@ public final class DbHelper {
         .replace("\"", "&quot;");
 
     if (value.indexOf("'") == 0 && value.length() > 1) // looks like a quoted string value
+    {
       value = "'" + value.substring(1, value.length() - 1).replace("'", (isAnsiSql ? "''" : "\\'")) + "'";
+    }
     // @formatter:on
 
     return value;
   }
 
   private int updateAll(Class<? extends OrmModel> klass, String[] columns, Object[] values,
-                        Collection<Integer> idList, boolean rawAssignment) {
+      Collection<Integer> idList, boolean rawAssignment) {
     if (klass == null || columns == null || columns.length == 0 || values == null || values.length == 0
-        || columns.length != values.length || idList == null || idList.isEmpty())
+        || columns.length != values.length || idList == null || idList.isEmpty()) {
       return 0;
+    }
 
     HashMap<String, FieldProperties> fieldMap = getClassFields(klass);
     List<String> updates = new ArrayList<>();
@@ -1630,24 +1741,29 @@ public final class DbHelper {
     for (int i = 0, end = columns.length; i < end; i++) {
       column = columns[i];
       if (column == null || (column = column.toLowerCase()).isEmpty() || column.equals("id")
-          || column.equals("created_at"))
+          || column.equals("created_at")) {
         continue;
+      }
 
       value = column.equals("updated_at") ? getNowMillis() : values[i];
 
-      if (fieldMap.containsKey(column))
-        if (rawAssignment)
-          if (value == null)
+      if (fieldMap.containsKey(column)) {
+        if (rawAssignment) {
+          if (value == null) {
             updates.add(column + "=null");
-          else
+          } else {
             updates.add(column + "=" + escape(value.toString(), ansiSql));
-        else
+          }
+        } else {
           updates.add(column + "=?");
+        }
+      }
     }
 
     List<String> ids = new ArrayList<>();
-    for (Integer id : idList)
+    for (Integer id : idList) {
       ids.add(id.toString());
+    }
 
     String sqlUpdate = UPDATE_STR + tableName(klass) + " SET " + String.join(",", updates) + WHERE_STR + "id IN ("
         + String.join(",", ids) + ")";
@@ -1655,9 +1771,11 @@ public final class DbHelper {
     try {
       pStUpdate = connection.prepareStatement(sqlUpdate);
 
-      if (!rawAssignment)
-        for (int i = 0, end = values.length; i < end; i++)
+      if (!rawAssignment) {
+        for (int i = 0, end = values.length; i < end; i++) {
           pStUpdate.setObject(i + 1, values[i]);
+        }
+      }
 
       LOGGER.info(getQueryForLog(pStUpdate));
 

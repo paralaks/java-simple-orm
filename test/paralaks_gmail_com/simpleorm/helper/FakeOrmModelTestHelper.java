@@ -208,16 +208,18 @@ public class FakeOrmModelTestHelper {
       stDrop.execute("drop table " + TABLE_NAME_FAKE_MODEL);
       stDrop.close();
     }
-    if (connection != null)
+    if (connection != null) {
       connection.close();
+    }
   }
 
   public void populateTestTable() {
     Statement stInsert;
     try {
       stInsert = connection.createStatement();
-      for (String query : TEST_DATA_QUERIES)
+      for (String query : TEST_DATA_QUERIES) {
         stInsert.execute(query);
+      }
       stInsert.close();
     } catch (SQLException e) {
       assertTrue(e.getMessage(), e == null);
