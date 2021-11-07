@@ -246,7 +246,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     model.setCreatedAt(DATE_NOT_EMPTY);
     fields = db.fields(model);
     assertEquals(3, fields.size());
-    assertEquals(new Integer(9), fields.get("id"));
+    assertEquals(Integer.valueOf(9), fields.get("id"));
     assertNull(fields.get("status"));
     assertNull(fields.get("total"));
     assertEquals(CONTENT_NOT_EMPTY, fields.get("content"));
@@ -622,7 +622,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     model.initAllNull();
     model.setId(1); // careful with id=1; saved by query so all values are null
     foundOne = db.find(model);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -632,9 +632,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     model.initAllNull();
     model.setId(3);
     foundOne = db.find(model);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(0), foundOne.getTotal());
+    assertEquals(Integer.valueOf(0), foundOne.getTotal());
     assertNull(foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
@@ -642,9 +642,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     model.initAllNull();
     model.setId(5);
     foundOne = db.find(model);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertEquals(DATE_NOT_EMPTY, foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());
@@ -660,9 +660,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     model.setStatus(true);
     model.setTotal(2);
     foundOne = db.find(model);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertEquals(DATE_NOT_EMPTY, foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());
@@ -673,9 +673,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     model.setTotal(1);
     model.setContent(CONTENT_NOT_EMPTY);
     foundOne = db.find(model);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(1), foundOne.getTotal());
+    assertEquals(Integer.valueOf(1), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
@@ -697,7 +697,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(model);
     assertEquals(1, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -709,7 +709,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(model);
     assertEquals(1, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(2), foundOne.getId());
+    assertEquals(Integer.valueOf(2), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -721,9 +721,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(model);
     assertEquals(1, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(0), foundOne.getTotal());
+    assertEquals(Integer.valueOf(0), foundOne.getTotal());
     assertNull(foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
@@ -733,9 +733,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(model);
     assertEquals(1, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertEquals(DATE_NOT_EMPTY, foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());
@@ -745,33 +745,33 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     model.setStatus(false);
     foundList = db.findAll(model);
     assertEquals(2, foundList.size());
-    assertEquals(new Integer(2), foundList.get(0).getId());
-    assertEquals(new Integer(3), foundList.get(1).getId());
+    assertEquals(Integer.valueOf(2), foundList.get(0).getId());
+    assertEquals(Integer.valueOf(3), foundList.get(1).getId());
 
     model.initAllNull();
     model.setStatus(true);
     foundList = db.findAll(model);
     assertEquals(2, foundList.size());
-    assertEquals(new Integer(4), foundList.get(0).getId());
-    assertEquals(new Integer(5), foundList.get(1).getId());
+    assertEquals(Integer.valueOf(4), foundList.get(0).getId());
+    assertEquals(Integer.valueOf(5), foundList.get(1).getId());
 
     model.initAllNull();
     model.setTotal(0);
     foundList = db.findAll(model);
     assertEquals(1, foundList.size());
-    assertEquals(new Integer(3), foundList.get(0).getId());
+    assertEquals(Integer.valueOf(3), foundList.get(0).getId());
 
     model.initAllNull();
     model.setTotal(1);
     foundList = db.findAll(model);
     assertEquals(1, foundList.size());
-    assertEquals(new Integer(4), foundList.get(0).getId());
+    assertEquals(Integer.valueOf(4), foundList.get(0).getId());
 
     model.initAllNull();
     model.setTotal(2);
     foundList = db.findAll(model);
     assertEquals(1, foundList.size());
-    assertEquals(new Integer(5), foundList.get(0).getId());
+    assertEquals(Integer.valueOf(5), foundList.get(0).getId());
   }
 
   private void sharedTestsForTestFindAllFunction_ClassWhereOrderbyLimit() {
@@ -781,47 +781,47 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(FakeOrmModel.class, "total IS NOT NULL", "id ASC", null, null);
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total IS NOT NULL", "id DESC", null, null);
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total IS NOT NULL", "id DESC", 0, null);
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total IS NOT NULL", "id DESC", null, 100);
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total IS NOT NULL", "id DESC", 0, 100);
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total IS NOT NULL", "id DESC", 0, 0);
     assertEquals(3, foundList.size());
@@ -866,70 +866,70 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(FakeOrmModel.class, "total IS NOT NULL", null);
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total IS NOT NULL", "id ASC");
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total IS NOT NULL", "id DESC");
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total IS NULL", "id ASC");
     assertEquals(2, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(2), foundOne.getId());
+    assertEquals(Integer.valueOf(2), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total IS NULL", "id DESC");
     assertEquals(2, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(2), foundOne.getId());
+    assertEquals(Integer.valueOf(2), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total>='" + 0 + "'", null);
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total>='" + 0 + "'", "id ASC");
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total>='" + 0 + "'", "id DESC");
     assertEquals(3, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     foundOne = foundList.get(2);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
   }
 
   private void sharedTestsForTestFindAllFunction_ClassWhere() {
@@ -945,9 +945,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(FakeOrmModel.class, "total='" + 0 + "'");
     assertEquals(1, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(0), foundOne.getTotal());
+    assertEquals(Integer.valueOf(0), foundOne.getTotal());
     assertNull(foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
@@ -955,9 +955,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(FakeOrmModel.class, "total='" + 1 + "'");
     assertEquals(1, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(1), foundOne.getTotal());
+    assertEquals(Integer.valueOf(1), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
@@ -965,16 +965,16 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(FakeOrmModel.class, "status='" + 1 + "'");
     assertEquals(2, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(1), foundOne.getTotal());
+    assertEquals(Integer.valueOf(1), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertEquals(DATE_NOT_EMPTY, foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());
@@ -982,9 +982,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(FakeOrmModel.class, "status='" + 0 + "'");
     assertEquals(2, foundList.size());
     foundOne = foundList.get(0);
-    assertEquals(new Integer(2), foundOne.getId());
+    assertEquals(Integer.valueOf(2), foundOne.getId());
     foundOne = foundList.get(1);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
 
     foundList = db.findAll(FakeOrmModel.class, "total>='" + 0 + "'");
     assertEquals(3, foundList.size());
@@ -1088,7 +1088,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
   private void sharedTestsForTestFindFunction_ClassWhere() {
     foundOne = db.find(FakeOrmModel.class, null);
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1097,7 +1097,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, "total IS NULL");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1106,36 +1106,36 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, "total IS NOT NULL");
     assertNotNull(foundOne);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(0), foundOne.getTotal());
+    assertEquals(Integer.valueOf(0), foundOne.getTotal());
     assertNull(foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
 
     foundOne = db.find(FakeOrmModel.class, "total='" + 0 + "'");
     assertNotNull(foundOne);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(0), foundOne.getTotal());
+    assertEquals(Integer.valueOf(0), foundOne.getTotal());
     assertNull(foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
 
     foundOne = db.find(FakeOrmModel.class, "total='" + 1 + "'");
     assertNotNull(foundOne);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(1), foundOne.getTotal());
+    assertEquals(Integer.valueOf(1), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
 
     foundOne = db.find(FakeOrmModel.class, "total='" + 2 + "'");
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertEquals(DATE_NOT_EMPTY, foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());
@@ -1146,9 +1146,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, "status='" + 1 + "'");
     assertNotNull(foundOne);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(1), foundOne.getTotal());
+    assertEquals(Integer.valueOf(1), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
@@ -1156,19 +1156,19 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, "status='" + 0 + "'");
     assertNotNull(foundOne);
-    assertEquals(new Integer(2), foundOne.getId());
+    assertEquals(Integer.valueOf(2), foundOne.getId());
 
     foundOne = db.find(FakeOrmModel.class, "total>='" + 0 + "'");
     assertNotNull(foundOne);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
 
     foundOne = db.find(FakeOrmModel.class, "total>='" + 1 + "'");
     assertNotNull(foundOne);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
 
     foundOne = db.find(FakeOrmModel.class, "total>='" + 2 + "'");
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
     foundOne = db.find(FakeOrmModel.class, "status=0 AND total>='" + 0 + "'");
     assertNotNull(foundOne);
@@ -1189,7 +1189,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, null, null);
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1198,7 +1198,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, null, "id ASC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1207,9 +1207,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, null, "id DESC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertEquals(DATE_NOT_EMPTY, foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());
@@ -1217,7 +1217,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, "total IS NULL", null);
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1226,7 +1226,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, "total IS NULL", "id ASC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1235,7 +1235,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, "total IS NULL", "id DESC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(2), foundOne.getId());
+    assertEquals(Integer.valueOf(2), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1245,27 +1245,27 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, "total IS NOT NULL", null);
     assertNotNull(foundOne);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(0), foundOne.getTotal());
+    assertEquals(Integer.valueOf(0), foundOne.getTotal());
     assertNull(foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
 
     foundOne = db.find(FakeOrmModel.class, "total IS NOT NULL", "id ASC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(0), foundOne.getTotal());
+    assertEquals(Integer.valueOf(0), foundOne.getTotal());
     assertNull(foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
 
     foundOne = db.find(FakeOrmModel.class, "total IS NOT NULL", "id DESC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertEquals(DATE_NOT_EMPTY, foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());
@@ -1273,41 +1273,41 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, "total>='" + 0 + "'", null);
     assertNotNull(foundOne);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
 
     foundOne = db.find(FakeOrmModel.class, "total>='" + 0 + "'", "id ASC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(3), foundOne.getId());
+    assertEquals(Integer.valueOf(3), foundOne.getId());
 
     foundOne = db.find(FakeOrmModel.class, "total>='" + 0 + "'", "id DESC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
 
     foundOne = db.find(FakeOrmModel.class, "total>='" + 2 + "'", null);
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
     foundOne = db.find(FakeOrmModel.class, "total>='" + 2 + "'", "id ASC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
     foundOne = db.find(FakeOrmModel.class, "total>='" + 2 + "'", "id DESC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
 
     foundOne = db.find(FakeOrmModel.class, "created_at IS NULL", null);
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
 
     foundOne = db.find(FakeOrmModel.class, "created_at IS NULL", "id ASC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
 
     foundOne = db.find(FakeOrmModel.class, "created_at IS NULL", "id DESC");
     assertNotNull(foundOne);
-    assertEquals(new Integer(4), foundOne.getId());
+    assertEquals(Integer.valueOf(4), foundOne.getId());
   }
 
   @Test
@@ -1364,7 +1364,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
   public void testUpdateColumFunction_ObjectColumnValue() throws SQLException {
     populateTestTable();
 
-    Integer total = new Integer(123);
+    Integer total = Integer.valueOf(123);
 
     // fake columns, non existent objects etc
     assertFalse(db.updateColumn(null, null, null));
@@ -1385,7 +1385,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     // update each columns one by one and query
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1396,7 +1396,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(db.updateColumn(model2, "status", Boolean.FALSE));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1407,7 +1407,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(db.updateColumn(model2, "total", total));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertEquals(total, foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1418,7 +1418,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(db.updateColumn(model2, "content", CONTENT_NOT_EMPTY));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertEquals(total, foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
@@ -1429,7 +1429,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertFalse(db.updateColumn(model2, "created_at", DATE_NOT_EMPTY));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertEquals(total, foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
@@ -1440,7 +1440,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(db.updateColumn(model2, "updated_at", DATE_NOT_EMPTY));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertEquals(total, foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
@@ -1478,7 +1478,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     // update each columns one by one and query
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1489,7 +1489,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(db.updateColumn(FakeOrmModel.class, model2.getId(), "status", Boolean.FALSE));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -1500,9 +1500,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(db.updateColumn(FakeOrmModel.class, model2.getId(), "total", 123));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(123), foundOne.getTotal());
+    assertEquals(Integer.valueOf(123), foundOne.getTotal());
     assertNull(foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
@@ -1511,9 +1511,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(db.updateColumn(FakeOrmModel.class, model2.getId(), "content", CONTENT_NOT_EMPTY));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(123), foundOne.getTotal());
+    assertEquals(Integer.valueOf(123), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
@@ -1522,9 +1522,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertFalse(db.updateColumn(FakeOrmModel.class, model2.getId(), "created_at", DATE_NOT_EMPTY));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(123), foundOne.getTotal());
+    assertEquals(Integer.valueOf(123), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertNull(foundOne.getUpdatedAt());
@@ -1533,9 +1533,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(db.updateColumn(FakeOrmModel.class, model2.getId(), "updated_at", DATE_NOT_EMPTY));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
-    assertEquals(new Integer(123), foundOne.getTotal());
+    assertEquals(Integer.valueOf(123), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertNull(foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());
@@ -1639,9 +1639,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     model.setId(5);
     foundOne = model.find();
 
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     foundOne.setId(3);
     foundOne.setStatus(null);
@@ -1688,9 +1688,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     model.setId(5);
     foundOne = model.find();
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertEquals(DATE_NOT_EMPTY, foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());
@@ -1785,10 +1785,10 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     resultList = new ArrayList<>();
     db.assignResultSetToListOrObject(rSet, resultList, FakeOrmModel.class, null);
     assertEquals(db.count(FakeOrmModel.class), resultList.size());
-    assertEquals(new Integer(1), resultList.get(0).getId());
-    assertEquals(new Integer(2), resultList.get(1).getId());
-    assertEquals(new Integer(3), resultList.get(2).getId());
-    assertEquals(new Integer(4), resultList.get(3).getId());
+    assertEquals(Integer.valueOf(1), resultList.get(0).getId());
+    assertEquals(Integer.valueOf(2), resultList.get(1).getId());
+    assertEquals(Integer.valueOf(3), resultList.get(2).getId());
+    assertEquals(Integer.valueOf(4), resultList.get(3).getId());
 
     model.initAllNull();
     model.setId(5);
@@ -1834,7 +1834,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     model.setId(5);
     foundOne = db.find(model);
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
 
     int countModelBefore = db.count(FakeOrmModel.class);
     assertTrue(db.delete(model));
@@ -1948,27 +1948,27 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundIds = db.findIds(FakeOrmModel.class, "total='" + 0 + "'");
     assertEquals(1, foundIds.size());
     foundId = foundIds.get(0);
-    assertEquals(new Integer(3), foundId);
+    assertEquals(Integer.valueOf(3), foundId);
 
     foundIds = db.findIds(FakeOrmModel.class, "total='" + 1 + "'");
     assertEquals(1, foundIds.size());
     foundId = foundIds.get(0);
-    assertEquals(new Integer(4), foundId);
+    assertEquals(Integer.valueOf(4), foundId);
 
     foundIds = db.findIds(FakeOrmModel.class, "status='" + 1 + "'");
     assertEquals(2, foundIds.size());
     foundId = foundIds.get(0);
-    assertEquals(new Integer(4), foundId);
+    assertEquals(Integer.valueOf(4), foundId);
 
     foundId = foundIds.get(1);
-    assertEquals(new Integer(5), foundId);
+    assertEquals(Integer.valueOf(5), foundId);
 
     foundIds = db.findIds(FakeOrmModel.class, "status='" + 0 + "'");
     assertEquals(2, foundIds.size());
     foundId = foundIds.get(0);
-    assertEquals(new Integer(2), foundId);
+    assertEquals(Integer.valueOf(2), foundId);
     foundId = foundIds.get(1);
-    assertEquals(new Integer(3), foundId);
+    assertEquals(Integer.valueOf(3), foundId);
 
     foundIds = db.findIds(FakeOrmModel.class, "total>='" + 0 + "'");
     assertEquals(3, foundIds.size());
@@ -2014,9 +2014,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(FakeOrmModel.class, null);
     assertEquals(5, foundList.size());
     assertNull(foundList.get(1).getTotal());
-    assertEquals(new Integer(0), foundList.get(2).getTotal());
-    assertEquals(new Integer(1), foundList.get(3).getTotal());
-    assertEquals(new Integer(2), foundList.get(4).getTotal());
+    assertEquals(Integer.valueOf(0), foundList.get(2).getTotal());
+    assertEquals(Integer.valueOf(1), foundList.get(3).getTotal());
+    assertEquals(Integer.valueOf(2), foundList.get(4).getTotal());
 
     assertEquals(4, db.updateAll(FakeOrmModel.class, column, TOTAL_NOT_EMPTY, Arrays.asList(2, 3, 4, 5)));
 
@@ -2060,9 +2060,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(FakeOrmModel.class, null);
     assertEquals(5, foundList.size());
     assertNull(foundList.get(1).getTotal());
-    assertEquals(new Integer(0), foundList.get(2).getTotal());
-    assertEquals(new Integer(1), foundList.get(3).getTotal());
-    assertEquals(new Integer(2), foundList.get(4).getTotal());
+    assertEquals(Integer.valueOf(0), foundList.get(2).getTotal());
+    assertEquals(Integer.valueOf(1), foundList.get(3).getTotal());
+    assertEquals(Integer.valueOf(2), foundList.get(4).getTotal());
     assertNull(foundList.get(1).getContent());
     assertNull(foundList.get(2).getContent());
     assertEquals(CONTENT_NOT_EMPTY, foundList.get(3).getContent());
@@ -2177,9 +2177,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     foundList = db.findAll(FakeOrmModel.class, null);
     assertEquals(5, foundList.size());
     assertNull(foundList.get(1).getTotal());
-    assertEquals(new Integer(0), foundList.get(2).getTotal());
-    assertEquals(new Integer(1), foundList.get(3).getTotal());
-    assertEquals(new Integer(2), foundList.get(4).getTotal());
+    assertEquals(Integer.valueOf(0), foundList.get(2).getTotal());
+    assertEquals(Integer.valueOf(1), foundList.get(3).getTotal());
+    assertEquals(Integer.valueOf(2), foundList.get(4).getTotal());
 
     assertEquals(4, db.updateAllRaw(FakeOrmModel.class, column, TOTAL_NOT_EMPTY, Arrays.asList(2, 3, 4, 5)));
 
@@ -2239,7 +2239,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
   public void testUpdateFieldFunction() throws SQLException {
     populateTestTable();
 
-    Integer total = new Integer(123);
+    Integer total = Integer.valueOf(123);
 
     // fake columns, non existent objects etc
     assertFalse(db.updateColumn(null, null, null));
@@ -2260,7 +2260,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     // update each columns one by one and query
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertNull(foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -2271,7 +2271,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(model2.updateField("status", Boolean.FALSE));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertNull(foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -2282,7 +2282,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(model2.updateField("total", total));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertEquals(total, foundOne.getTotal());
     assertNull(foundOne.getContent());
@@ -2293,7 +2293,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertTrue(model2.updateField("content", CONTENT_NOT_EMPTY));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertEquals(total, foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
@@ -2304,7 +2304,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertFalse(model2.updateField("created_at", DATE_NOT_EMPTY));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertEquals(total, foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
@@ -2315,7 +2315,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertFalse(model2.updateField("updated_at", DATE_NOT_EMPTY));
     foundOne = db.find(FakeOrmModel.class, "id=1");
     assertNotNull(foundOne);
-    assertEquals(new Integer(1), foundOne.getId());
+    assertEquals(Integer.valueOf(1), foundOne.getId());
     assertEquals(Boolean.FALSE, foundOne.getStatus());
     assertEquals(total, foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
@@ -2331,9 +2331,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
 
     foundOne = db.find(FakeOrmModel.class, "id=5");
     assertNotNull(foundOne);
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertEquals(DATE_NOT_EMPTY, foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());
@@ -2352,9 +2352,9 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
     assertNull(foundOne.getOldValue("updated_at"));
 
     assertTrue(db.reload(foundOne));
-    assertEquals(new Integer(5), foundOne.getId());
+    assertEquals(Integer.valueOf(5), foundOne.getId());
     assertEquals(Boolean.TRUE, foundOne.getStatus());
-    assertEquals(new Integer(2), foundOne.getTotal());
+    assertEquals(Integer.valueOf(2), foundOne.getTotal());
     assertEquals(CONTENT_NOT_EMPTY, foundOne.getContent());
     assertEquals(DATE_NOT_EMPTY, foundOne.getCreatedAt());
     assertEquals(DATE_NOT_EMPTY, foundOne.getUpdatedAt());

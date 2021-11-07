@@ -1490,7 +1490,7 @@ public final class DbHelper {
 
             if (fp.fieldType.equals("Integer")) {
               try {
-                fp.field.set(object, new Integer(trimmedValue));
+                fp.field.set(object, Integer.valueOf(trimmedValue));
               } catch (Exception e1) {
                 fp.field.set(object, trimmedValue.equalsIgnoreCase("true") ? 1 : 0);
               }

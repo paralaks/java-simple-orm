@@ -158,11 +158,6 @@ public class FakeOrmModelTestHelper {
     return pool;
   }
 
-  @Override
-  protected void finalize() throws Throwable {
-    super.finalize();
-  }
-
   @BeforeEach
   public void setUp() throws SQLException {
     connection = pool.getConnection();
