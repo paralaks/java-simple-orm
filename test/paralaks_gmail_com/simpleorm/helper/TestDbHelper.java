@@ -1,10 +1,8 @@
 package paralaks_gmail_com.simpleorm.helper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.sql.DataSource;
-
-import org.junit.Test;
 
 import com.mchange.v2.c3p0.DataSources;
 
@@ -476,7 +472,7 @@ public class TestDbHelper extends FakeOrmModelTestHelper {
         }
       } catch (Exception e2) {
       }
-      assertNull(e.getMessage(), e);
+      fail(e.getMessage());
     }
   }
 

@@ -1,6 +1,6 @@
 package paralaks_gmail_com.simpleorm.helper;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,12 +13,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import paralaks_gmail_com.simpleorm.model.FakeOrmModel;
 
 public class FakeOrmModelTestHelper {
@@ -116,7 +114,7 @@ public class FakeOrmModelTestHelper {
       pool.setAcquireIncrement(1);
       pool.setMaxPoolSize(10);
     } catch (Exception e) {
-      Assert.fail("Failed to instantiate a C3PO combined pooled data source");
+      fail("Failed to instantiate a C3PO combined pooled data source");
     }
 
   }
@@ -129,7 +127,7 @@ public class FakeOrmModelTestHelper {
     try {
       return DriverManager.getConnection(getJdbcUrl());
     } catch (SQLException e) {
-      Assert.fail("Failed to get DB connection");
+      fail("Failed to get DB connection");
     }
 
     return null;
@@ -150,7 +148,7 @@ public class FakeOrmModelTestHelper {
       pool.setAcquireIncrement(1);
       pool.setMaxPoolSize(5);
     } catch (Exception e) {
-      Assert.fail("Failed to instantiate a C3PO combined pooled data source");
+      fail("Failed to instantiate a C3PO combined pooled data source");
     }
 
     return pool;
@@ -165,7 +163,7 @@ public class FakeOrmModelTestHelper {
     super.finalize();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws SQLException {
     connection = pool.getConnection();
     db = new DbHelper(connection);
@@ -201,7 +199,7 @@ public class FakeOrmModelTestHelper {
     foundList = null;
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws SQLException {
     if (testTableReady) {
       Statement stDrop = connection.createStatement();
@@ -222,7 +220,7 @@ public class FakeOrmModelTestHelper {
       }
       stInsert.close();
     } catch (SQLException e) {
-      assertTrue(e.getMessage(), e == null);
+      fail(e.getMessage());
     }
   }
 

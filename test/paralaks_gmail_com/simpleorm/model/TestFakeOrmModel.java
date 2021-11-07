@@ -1,10 +1,9 @@
 package paralaks_gmail_com.simpleorm.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 import static paralaks_gmail_com.simpleorm.helper.DbHelper.initHashMap;
 
 import java.sql.Connection;
@@ -15,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import org.junit.Test;
 
 import paralaks_gmail_com.simpleorm.helper.FakeOrmModelTestHelper;
 
@@ -424,7 +421,7 @@ public class TestFakeOrmModel extends FakeOrmModelTestHelper {
         }
       } catch (Exception e2) {
       }
-      assertNull(e.getMessage(), e);
+      fail(e.getMessage());
     }
   }
 
